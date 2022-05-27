@@ -17,7 +17,7 @@
     "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
     "build": "rm -rf ./dist && webpack && tsc",
     "preget-proto": "shx rm -rf proto",
-    "get-proto": "yarn preget-proto && COSMOS_SDK_REF=v0.45.4-merlion.6 IBC_GO_REF=v3.0.0 ./scripts/get-proto.sh",
+    "get-proto": "yarn preget-proto && COSMOS_SDK_REF=v0.45.4-merlion.6 IBC_GO_REF=v3.0.0 MERLION_REF=main ./scripts/get-proto.sh",
     "define-proto": "./scripts/define-proto.sh && yarn postdefine-proto",
     "postdefine-proto": "prettier --write \"src/proto/**/*.ts\""
   },
@@ -44,6 +44,7 @@
     "@cosmjs/tendermint-rpc": "^0.28.4",
     "@cosmjs/utils": "^0.28.4",
     "cosmjs-types": "^0.4.0",
+    "ethers": "^5.6.8",
     "long": "^4.0.0",
     "protobufjs": "~6.11.2"
   }

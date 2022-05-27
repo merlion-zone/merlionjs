@@ -6,6 +6,7 @@ COSMOS_PROTO_DIR="./proto/cosmos/cosmos-sdk/proto"
 THIRD_PARTY_PROTO_DIR="./proto/cosmos/cosmos-sdk/third_party/proto"
 IBC_PROTO_DIR="./proto/cosmos/ibc-go/proto"
 MERLION_PROTO_DIR="./proto/cosmos/merlion/proto"
+MERLION_THIRD_PARTY_PROTO_DIR="./proto/cosmos/merlion/third_party/proto"
 OUT_DIR="./src/proto/"
 
 PLUGIN_PATH="$(realpath ./bin)/protoc-gen-ts_proto_yarn_2"
@@ -21,6 +22,7 @@ protoc \
   --proto_path="$THIRD_PARTY_PROTO_DIR" \
   --proto_path="$IBC_PROTO_DIR" \
   --proto_path="$MERLION_PROTO_DIR" \
+  --proto_path="$MERLION_THIRD_PARTY_PROTO_DIR" \
   --ts_proto_yarn_2_opt="esModuleInterop=true,forceLong=long,useOptionals=true" \
   "$COSMOS_PROTO_DIR/cosmos/auth/v1beta1/auth.proto" \
   "$COSMOS_PROTO_DIR/cosmos/auth/v1beta1/query.proto" \
@@ -95,7 +97,17 @@ protoc \
   "$MERLION_PROTO_DIR/merlion/vesting/v1/tx.proto" \
   "$MERLION_PROTO_DIR/merlion/voter/v1/genesis.proto" \
   "$MERLION_PROTO_DIR/merlion/voter/v1/query.proto" \
-  "$MERLION_PROTO_DIR/merlion/voter/v1/tx.proto"
+  "$MERLION_PROTO_DIR/merlion/voter/v1/tx.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/crypto/v1/ethsecp256k1/keys.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/evm/v1/evm.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/evm/v1/genesis.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/evm/v1/query.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/evm/v1/tx.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/feemarket/v1/feemarket.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/feemarket/v1/genesis.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/feemarket/v1/query.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/types/v1/account.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/types/v1/web3.proto"
 
 # Remove unnecessary files
 rm -rf \
