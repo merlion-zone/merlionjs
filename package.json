@@ -7,15 +7,19 @@
     "access": "public"
   },
   "author": "The Merlion Team",
+  "homepage": "https://github.com/merlion-zone/merlionjs#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/merlion-zone/merlionjs.git"
+  },
   "bugs": {
     "url": "https://github.com/merlion-zone/merlionjs/issues"
   },
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
-  "browser": "dist/browser.js",
   "scripts": {
     "format": "prettier --write --loglevel warn \"./src/**/*.ts\"",
-    "build": "rm -rf ./dist && webpack && tsc",
+    "build": "rm -rf ./dist && tsc",
     "preget-proto": "shx rm -rf proto",
     "get-proto": "yarn preget-proto && COSMOS_SDK_REF=v0.45.4-merlion.6 IBC_GO_REF=v3.0.0 MERLION_REF=main ./scripts/get-proto.sh",
     "define-proto": "./scripts/define-proto.sh && yarn postdefine-proto",
@@ -37,12 +41,16 @@
   "packageManager": "yarn@3.2.1",
   "dependencies": {
     "@cosmjs/amino": "^0.28.4",
+    "@cosmjs/crypto": "^0.28.4",
     "@cosmjs/encoding": "^0.28.4",
     "@cosmjs/math": "^0.28.4",
     "@cosmjs/proto-signing": "^0.28.4",
     "@cosmjs/stargate": "^0.28.4",
     "@cosmjs/tendermint-rpc": "^0.28.4",
     "@cosmjs/utils": "^0.28.4",
+    "@ethersproject/abstract-provider": "^5.6.1",
+    "@ethersproject/abstract-signer": "^5.6.2",
+    "@ethersproject/providers": "^5.6.8",
     "cosmjs-types": "^0.4.0",
     "ethers": "^5.6.8",
     "long": "^4.0.0",

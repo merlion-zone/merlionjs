@@ -1,5 +1,6 @@
 import {
-  AminoConverters, AminoTypes,
+  AminoConverters,
+  AminoTypes,
   createAuthzAminoConverters,
   createBankAminoConverters,
   createDistributionAminoConverters,

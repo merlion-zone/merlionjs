@@ -1,4 +1,5 @@
-import { StdSignDoc as StdSignDocAmino } from "@cosmjs/amino";
+import { StdFee as StdFeeAmino, StdSignDoc as StdSignDocAmino } from "@cosmjs/amino";
+import { ethers } from "ethers";
 
 export interface TypeEntry {
   name: string;
@@ -55,17 +56,17 @@ export function generateTypedDataTypes(typesMsgValue: TypedDataTypesMsgValue): T
 
 export interface TypedData {
   domain: object;
-  message: StdSignDocAmino;
+  message: SignDocAmino;
   primaryType: "Tx";
   types: TypedDataTypes;
 }
 
-export function createTypedData(types: TypedDataTypes, chainId: number, message: StdSignDocAmino): TypedData {
+export function createTypedData(types: TypedDataTypes, chainId: number, message: SignDocAmino): TypedData {
   return {
     domain: {
-      chainId,
-      name: "Merlion Web3",
-      verifyingContract: "merlion",
+      chainId: ethers.utils.hexlify(chainId),
+      name: "Cosmos Web3",
+      verifyingContract: "cosmos",
       version: "1.0.0",
       salt: "0",
     },
@@ -73,4 +74,12 @@ export function createTypedData(types: TypedDataTypes, chainId: number, message:
     primaryType: "Tx",
     types,
   };
+}
+
+export interface FeeAmino extends StdFeeAmino {
+  readonly feePayer: string;
+}
+
+export interface SignDocAmino extends StdSignDocAmino {
+  readonly fee: FeeAmino;
 }

@@ -8,7 +8,11 @@ export const bankEIP712Types: ReadonlyArray<[string, eip712.TypedDataTypesMsgVal
       MsgValue: [
         { name: "from_address", type: "string" },
         { name: "to_address", type: "string" },
-        { name: "amount", type: "Coin[]" },
+        { name: "amount", type: "TypeAmount[]" },
+      ],
+      TypeAmount: [
+        { name: "denom", type: "string" },
+        { name: "amount", type: "string" },
       ],
     },
   ],
@@ -16,12 +20,24 @@ export const bankEIP712Types: ReadonlyArray<[string, eip712.TypedDataTypesMsgVal
     typeUrls.MsgMultiSend,
     {
       MsgValue: [
-        { name: "inputs", type: "AddrCoin[]" },
-        { name: "outputs", type: "AddrCoin[]" },
+        { name: "inputs", type: "TypeInputs[]" },
+        { name: "outputs", type: "TypeOutputs[]" },
       ],
-      AddrCoin: [
+      TypeInputs: [
         { name: "address", type: "string" },
-        { name: "coins", type: "Coin[]" },
+        { name: "coins", type: "TypeInputsCoins[]" },
+      ],
+      TypeOutputs: [
+        { name: "address", type: "string" },
+        { name: "coins", type: "TypeOutputsCoins[]" },
+      ],
+      TypeInputsCoins: [
+        { name: "denom", type: "string" },
+        { name: "amount", type: "string" },
+      ],
+      TypeOutputsCoins: [
+        { name: "denom", type: "string" },
+        { name: "amount", type: "string" },
       ],
     },
   ],
