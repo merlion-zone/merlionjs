@@ -386,7 +386,7 @@ export class MerlionClient extends StargateClient {
       return account;
     }
     if (!this.signer) {
-      return account;
+      return account; // with null pubkey
     } else if (isEIP712Signer(this.signer)) {
       const pubkey = await this.signer.getPubkey();
       return {
