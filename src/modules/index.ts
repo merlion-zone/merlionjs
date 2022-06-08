@@ -27,6 +27,8 @@ export { MakerExtension, setupMakerExtension } from "./maker/queries";
 
 export { OracleExtension, setupOracleExtension } from "./oracle/queries";
 
+export { MsgBeginRedelegateEncodeObject, isMsgBeginRedelegateEncodeObject } from "./staking/messages";
+
 export { VeExtension, setupVeExtension } from "./ve/queries";
 
 export { VestingExtension, setupVestingExtension } from "./vesting/queries";

@@ -7,9 +7,9 @@ import {
   feegrantTypes,
   govTypes,
   ibcTypes,
-  stakingTypes,
   vestingTypes,
 } from "@cosmjs/stargate/build/modules";
+import { stakingTypes } from "./staking/messages";
 
 export const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
   ["/cosmos.base.v1beta1.Coin", Coin],
