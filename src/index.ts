@@ -24,6 +24,8 @@ export {
   isAminoMsgDepositCollateral,
   isAminoMsgRedeemCollateral,
   isAminoMsgLiquidateCollateral,
+  isMsgBeginRedelegateEncodeObject,
+  MsgBeginRedelegateEncodeObject,
   Erc20Extension,
   GaugeExtension,
   MakerExtension,
