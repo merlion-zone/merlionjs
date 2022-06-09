@@ -21,8 +21,8 @@ export interface BackingRiskParams {
   burnFee: string;
   /** buyback fee rate */
   buybackFee: string;
-  /** recollateralize fee rate */
-  recollateralizeFee: string;
+  /** reback fee rate */
+  rebackFee: string;
 }
 
 /** CollateralRiskParams represents an object of collateral risk parameters. */
@@ -221,7 +221,7 @@ function createBaseBackingRiskParams(): BackingRiskParams {
     mintFee: "",
     burnFee: "",
     buybackFee: "",
-    recollateralizeFee: "",
+    rebackFee: "",
   };
 }
 
@@ -248,8 +248,8 @@ export const BackingRiskParams = {
     if (message.buybackFee !== "") {
       writer.uint32(58).string(message.buybackFee);
     }
-    if (message.recollateralizeFee !== "") {
-      writer.uint32(66).string(message.recollateralizeFee);
+    if (message.rebackFee !== "") {
+      writer.uint32(66).string(message.rebackFee);
     }
     return writer;
   },
@@ -283,7 +283,7 @@ export const BackingRiskParams = {
           message.buybackFee = reader.string();
           break;
         case 8:
-          message.recollateralizeFee = reader.string();
+          message.rebackFee = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -302,7 +302,7 @@ export const BackingRiskParams = {
       mintFee: isSet(object.mintFee) ? String(object.mintFee) : "",
       burnFee: isSet(object.burnFee) ? String(object.burnFee) : "",
       buybackFee: isSet(object.buybackFee) ? String(object.buybackFee) : "",
-      recollateralizeFee: isSet(object.recollateralizeFee) ? String(object.recollateralizeFee) : "",
+      rebackFee: isSet(object.rebackFee) ? String(object.rebackFee) : "",
     };
   },
 
@@ -315,7 +315,7 @@ export const BackingRiskParams = {
     message.mintFee !== undefined && (obj.mintFee = message.mintFee);
     message.burnFee !== undefined && (obj.burnFee = message.burnFee);
     message.buybackFee !== undefined && (obj.buybackFee = message.buybackFee);
-    message.recollateralizeFee !== undefined && (obj.recollateralizeFee = message.recollateralizeFee);
+    message.rebackFee !== undefined && (obj.rebackFee = message.rebackFee);
     return obj;
   },
 
@@ -328,7 +328,7 @@ export const BackingRiskParams = {
     message.mintFee = object.mintFee ?? "";
     message.burnFee = object.burnFee ?? "";
     message.buybackFee = object.buybackFee ?? "";
-    message.recollateralizeFee = object.recollateralizeFee ?? "";
+    message.rebackFee = object.rebackFee ?? "";
     return message;
   },
 };

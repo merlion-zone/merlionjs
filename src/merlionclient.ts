@@ -130,13 +130,13 @@ export class MerlionClient extends StargateClient {
     }
   }
 
-  protected override getQueryClient():
+  public override getQueryClient():
     | (QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension)
     | undefined {
     return this._queryClient;
   }
 
-  protected override forceGetQueryClient(): QueryClient &
+  public override forceGetQueryClient(): QueryClient &
     AuthExtension &
     BankExtension &
     StakingExtension &

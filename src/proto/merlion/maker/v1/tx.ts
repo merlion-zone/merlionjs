@@ -127,7 +127,10 @@ export interface MsgLiquidateCollateral {
   collateral?: Coin;
 }
 
-/** MsgReCollateralizeResponse defines the Msg/LiquidateCollateral response type. */
+/**
+ * MsgLiquidateCollateralResponse defines the Msg/LiquidateCollateral response
+ * type.
+ */
 export interface MsgLiquidateCollateralResponse {
   repayIn?: Coin;
   collateralOut?: Coin;
@@ -403,13 +406,13 @@ function createBaseMsgBurnBySwapResponse(): MsgBurnBySwapResponse {
 export const MsgBurnBySwapResponse = {
   encode(message: MsgBurnBySwapResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.burnFee !== undefined) {
-      Coin.encode(message.burnFee, writer.uint32(18).fork()).ldelim();
+      Coin.encode(message.burnFee, writer.uint32(10).fork()).ldelim();
     }
     if (message.backingOut !== undefined) {
-      Coin.encode(message.backingOut, writer.uint32(26).fork()).ldelim();
+      Coin.encode(message.backingOut, writer.uint32(18).fork()).ldelim();
     }
     if (message.lionOut !== undefined) {
-      Coin.encode(message.lionOut, writer.uint32(34).fork()).ldelim();
+      Coin.encode(message.lionOut, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -421,13 +424,13 @@ export const MsgBurnBySwapResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 1:
           message.burnFee = Coin.decode(reader, reader.uint32());
           break;
-        case 3:
+        case 2:
           message.backingOut = Coin.decode(reader, reader.uint32());
           break;
-        case 4:
+        case 3:
           message.lionOut = Coin.decode(reader, reader.uint32());
           break;
         default:
@@ -559,7 +562,7 @@ function createBaseMsgBuyBackingResponse(): MsgBuyBackingResponse {
 export const MsgBuyBackingResponse = {
   encode(message: MsgBuyBackingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingOut !== undefined) {
-      Coin.encode(message.backingOut, writer.uint32(34).fork()).ldelim();
+      Coin.encode(message.backingOut, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -571,7 +574,7 @@ export const MsgBuyBackingResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 4:
+        case 1:
           message.backingOut = Coin.decode(reader, reader.uint32());
           break;
         default:
@@ -696,7 +699,7 @@ function createBaseMsgSellBackingResponse(): MsgSellBackingResponse {
 export const MsgSellBackingResponse = {
   encode(message: MsgSellBackingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lionOut !== undefined) {
-      Coin.encode(message.lionOut, writer.uint32(34).fork()).ldelim();
+      Coin.encode(message.lionOut, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -708,7 +711,7 @@ export const MsgSellBackingResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 4:
+        case 1:
           message.lionOut = Coin.decode(reader, reader.uint32());
           break;
         default:

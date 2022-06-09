@@ -76,10 +76,10 @@ export interface QueryTotalCollateralResponse {
   totalCollateral?: TotalCollateral;
 }
 
-export interface QueryCollateralRatioRequest {}
+export interface QueryBackingRatioRequest {}
 
-export interface QueryCollateralRatioResponse {
-  collateralRatio: string;
+export interface QueryBackingRatioResponse {
+  backingRatio: string;
   lastUpdateBlock: Long;
 }
 
@@ -92,58 +92,87 @@ export interface QueryParamsResponse {
   params?: Params;
 }
 
-export interface QueryMintBySwapRequirementRequest {
-  mintTarget?: Coin;
+export interface EstimateMintBySwapInRequest {
+  mintOut?: Coin;
   backingDenom: string;
-  fullCollateral: boolean;
+  fullBacking: boolean;
 }
 
-export interface QueryMintBySwapRequirementResponse {
+export interface EstimateMintBySwapInResponse {
   backingIn?: Coin;
   lionIn?: Coin;
   mintFee?: Coin;
 }
 
-export interface QueryMintBySwapCapacityRequest {
-  backingAvail?: Coin;
-  lionAvail?: Coin;
+export interface EstimateMintBySwapOutRequest {
+  backingInMax?: Coin;
+  lionInMax?: Coin;
 }
 
-export interface QueryMintBySwapCapacityResponse {
+export interface EstimateMintBySwapOutResponse {
   backingIn?: Coin;
   lionIn?: Coin;
   mintOut?: Coin;
   mintFee?: Coin;
 }
 
-export interface QueryBurnBySwapRequest {
-  burnTarget?: Coin;
+export interface EstimateBurnBySwapOutRequest {
+  burnIn?: Coin;
   backingDenom: string;
 }
 
-export interface QueryBurnBySwapResponse {
+export interface EstimateBurnBySwapOutResponse {
   backingOut?: Coin;
   lionOut?: Coin;
   burnFee?: Coin;
 }
 
-export interface QueryBuyBackingRequest {
+export interface EstimateBuyBackingOutRequest {
   lionIn?: Coin;
   backingDenom: string;
 }
 
-export interface QueryBuyBackingResponse {
+export interface EstimateBuyBackingOutResponse {
   backingOut?: Coin;
   buybackFee?: Coin;
 }
 
-export interface QuerySellBackingRequest {
+export interface EstimateSellBackingOutRequest {
   backingIn?: Coin;
 }
 
-export interface QuerySellBackingResponse {
+export interface EstimateSellBackingOutResponse {
   lionOut?: Coin;
   sellbackFee?: Coin;
+}
+
+export interface EstimateMintByCollateralInRequest {
+  sender: string;
+  mintOut?: Coin;
+  collateralDenom: string;
+  lionInMax?: Coin;
+}
+
+export interface EstimateMintByCollateralInResponse {
+  lionIn?: Coin;
+  mintFee?: Coin;
+  totalColl?: TotalCollateral;
+  poolColl?: PoolCollateral;
+  accColl?: AccountCollateral;
+}
+
+export interface EstimateBurnByCollateralInRequest {
+  sender: string;
+  collateralDenom: string;
+  repayInMax?: Coin;
+}
+
+export interface EstimateBurnByCollateralInResponse {
+  repayIn?: Coin;
+  interestFee?: Coin;
+  totalColl?: TotalCollateral;
+  poolColl?: PoolCollateral;
+  accColl?: AccountCollateral;
 }
 
 function createBaseQueryAllBackingRiskParamsRequest(): QueryAllBackingRiskParamsRequest {
@@ -1068,19 +1097,19 @@ export const QueryTotalCollateralResponse = {
   },
 };
 
-function createBaseQueryCollateralRatioRequest(): QueryCollateralRatioRequest {
+function createBaseQueryBackingRatioRequest(): QueryBackingRatioRequest {
   return {};
 }
 
-export const QueryCollateralRatioRequest = {
-  encode(_: QueryCollateralRatioRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const QueryBackingRatioRequest = {
+  encode(_: QueryBackingRatioRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryCollateralRatioRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBackingRatioRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryCollateralRatioRequest();
+    const message = createBaseQueryBackingRatioRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1092,31 +1121,29 @@ export const QueryCollateralRatioRequest = {
     return message;
   },
 
-  fromJSON(_: any): QueryCollateralRatioRequest {
+  fromJSON(_: any): QueryBackingRatioRequest {
     return {};
   },
 
-  toJSON(_: QueryCollateralRatioRequest): unknown {
+  toJSON(_: QueryBackingRatioRequest): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryCollateralRatioRequest>, I>>(
-    _: I,
-  ): QueryCollateralRatioRequest {
-    const message = createBaseQueryCollateralRatioRequest();
+  fromPartial<I extends Exact<DeepPartial<QueryBackingRatioRequest>, I>>(_: I): QueryBackingRatioRequest {
+    const message = createBaseQueryBackingRatioRequest();
     return message;
   },
 };
 
-function createBaseQueryCollateralRatioResponse(): QueryCollateralRatioResponse {
-  return { collateralRatio: "", lastUpdateBlock: Long.ZERO };
+function createBaseQueryBackingRatioResponse(): QueryBackingRatioResponse {
+  return { backingRatio: "", lastUpdateBlock: Long.ZERO };
 }
 
-export const QueryCollateralRatioResponse = {
-  encode(message: QueryCollateralRatioResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.collateralRatio !== "") {
-      writer.uint32(10).string(message.collateralRatio);
+export const QueryBackingRatioResponse = {
+  encode(message: QueryBackingRatioResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.backingRatio !== "") {
+      writer.uint32(10).string(message.backingRatio);
     }
     if (!message.lastUpdateBlock.isZero()) {
       writer.uint32(16).int64(message.lastUpdateBlock);
@@ -1124,15 +1151,15 @@ export const QueryCollateralRatioResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryCollateralRatioResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBackingRatioResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryCollateralRatioResponse();
+    const message = createBaseQueryBackingRatioResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.collateralRatio = reader.string();
+          message.backingRatio = reader.string();
           break;
         case 2:
           message.lastUpdateBlock = reader.int64() as Long;
@@ -1145,26 +1172,26 @@ export const QueryCollateralRatioResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryCollateralRatioResponse {
+  fromJSON(object: any): QueryBackingRatioResponse {
     return {
-      collateralRatio: isSet(object.collateralRatio) ? String(object.collateralRatio) : "",
+      backingRatio: isSet(object.backingRatio) ? String(object.backingRatio) : "",
       lastUpdateBlock: isSet(object.lastUpdateBlock) ? Long.fromValue(object.lastUpdateBlock) : Long.ZERO,
     };
   },
 
-  toJSON(message: QueryCollateralRatioResponse): unknown {
+  toJSON(message: QueryBackingRatioResponse): unknown {
     const obj: any = {};
-    message.collateralRatio !== undefined && (obj.collateralRatio = message.collateralRatio);
+    message.backingRatio !== undefined && (obj.backingRatio = message.backingRatio);
     message.lastUpdateBlock !== undefined &&
       (obj.lastUpdateBlock = (message.lastUpdateBlock || Long.ZERO).toString());
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryCollateralRatioResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<QueryBackingRatioResponse>, I>>(
     object: I,
-  ): QueryCollateralRatioResponse {
-    const message = createBaseQueryCollateralRatioResponse();
-    message.collateralRatio = object.collateralRatio ?? "";
+  ): QueryBackingRatioResponse {
+    const message = createBaseQueryBackingRatioResponse();
+    message.backingRatio = object.backingRatio ?? "";
     message.lastUpdateBlock =
       object.lastUpdateBlock !== undefined && object.lastUpdateBlock !== null
         ? Long.fromValue(object.lastUpdateBlock)
@@ -1262,39 +1289,39 @@ export const QueryParamsResponse = {
   },
 };
 
-function createBaseQueryMintBySwapRequirementRequest(): QueryMintBySwapRequirementRequest {
-  return { mintTarget: undefined, backingDenom: "", fullCollateral: false };
+function createBaseEstimateMintBySwapInRequest(): EstimateMintBySwapInRequest {
+  return { mintOut: undefined, backingDenom: "", fullBacking: false };
 }
 
-export const QueryMintBySwapRequirementRequest = {
-  encode(message: QueryMintBySwapRequirementRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.mintTarget !== undefined) {
-      Coin.encode(message.mintTarget, writer.uint32(10).fork()).ldelim();
+export const EstimateMintBySwapInRequest = {
+  encode(message: EstimateMintBySwapInRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(10).fork()).ldelim();
     }
     if (message.backingDenom !== "") {
       writer.uint32(18).string(message.backingDenom);
     }
-    if (message.fullCollateral === true) {
-      writer.uint32(24).bool(message.fullCollateral);
+    if (message.fullBacking === true) {
+      writer.uint32(24).bool(message.fullBacking);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintBySwapRequirementRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintBySwapInRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryMintBySwapRequirementRequest();
+    const message = createBaseEstimateMintBySwapInRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.mintTarget = Coin.decode(reader, reader.uint32());
+          message.mintOut = Coin.decode(reader, reader.uint32());
           break;
         case 2:
           message.backingDenom = reader.string();
           break;
         case 3:
-          message.fullCollateral = reader.bool();
+          message.fullBacking = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1304,43 +1331,41 @@ export const QueryMintBySwapRequirementRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryMintBySwapRequirementRequest {
+  fromJSON(object: any): EstimateMintBySwapInRequest {
     return {
-      mintTarget: isSet(object.mintTarget) ? Coin.fromJSON(object.mintTarget) : undefined,
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
       backingDenom: isSet(object.backingDenom) ? String(object.backingDenom) : "",
-      fullCollateral: isSet(object.fullCollateral) ? Boolean(object.fullCollateral) : false,
+      fullBacking: isSet(object.fullBacking) ? Boolean(object.fullBacking) : false,
     };
   },
 
-  toJSON(message: QueryMintBySwapRequirementRequest): unknown {
+  toJSON(message: EstimateMintBySwapInRequest): unknown {
     const obj: any = {};
-    message.mintTarget !== undefined &&
-      (obj.mintTarget = message.mintTarget ? Coin.toJSON(message.mintTarget) : undefined);
+    message.mintOut !== undefined &&
+      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
     message.backingDenom !== undefined && (obj.backingDenom = message.backingDenom);
-    message.fullCollateral !== undefined && (obj.fullCollateral = message.fullCollateral);
+    message.fullBacking !== undefined && (obj.fullBacking = message.fullBacking);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryMintBySwapRequirementRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EstimateMintBySwapInRequest>, I>>(
     object: I,
-  ): QueryMintBySwapRequirementRequest {
-    const message = createBaseQueryMintBySwapRequirementRequest();
-    message.mintTarget =
-      object.mintTarget !== undefined && object.mintTarget !== null
-        ? Coin.fromPartial(object.mintTarget)
-        : undefined;
+  ): EstimateMintBySwapInRequest {
+    const message = createBaseEstimateMintBySwapInRequest();
+    message.mintOut =
+      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
     message.backingDenom = object.backingDenom ?? "";
-    message.fullCollateral = object.fullCollateral ?? false;
+    message.fullBacking = object.fullBacking ?? false;
     return message;
   },
 };
 
-function createBaseQueryMintBySwapRequirementResponse(): QueryMintBySwapRequirementResponse {
+function createBaseEstimateMintBySwapInResponse(): EstimateMintBySwapInResponse {
   return { backingIn: undefined, lionIn: undefined, mintFee: undefined };
 }
 
-export const QueryMintBySwapRequirementResponse = {
-  encode(message: QueryMintBySwapRequirementResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateMintBySwapInResponse = {
+  encode(message: EstimateMintBySwapInResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingIn !== undefined) {
       Coin.encode(message.backingIn, writer.uint32(10).fork()).ldelim();
     }
@@ -1353,10 +1378,10 @@ export const QueryMintBySwapRequirementResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintBySwapRequirementResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintBySwapInResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryMintBySwapRequirementResponse();
+    const message = createBaseEstimateMintBySwapInResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1377,7 +1402,7 @@ export const QueryMintBySwapRequirementResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryMintBySwapRequirementResponse {
+  fromJSON(object: any): EstimateMintBySwapInResponse {
     return {
       backingIn: isSet(object.backingIn) ? Coin.fromJSON(object.backingIn) : undefined,
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
@@ -1385,7 +1410,7 @@ export const QueryMintBySwapRequirementResponse = {
     };
   },
 
-  toJSON(message: QueryMintBySwapRequirementResponse): unknown {
+  toJSON(message: EstimateMintBySwapInResponse): unknown {
     const obj: any = {};
     message.backingIn !== undefined &&
       (obj.backingIn = message.backingIn ? Coin.toJSON(message.backingIn) : undefined);
@@ -1395,10 +1420,10 @@ export const QueryMintBySwapRequirementResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryMintBySwapRequirementResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EstimateMintBySwapInResponse>, I>>(
     object: I,
-  ): QueryMintBySwapRequirementResponse {
-    const message = createBaseQueryMintBySwapRequirementResponse();
+  ): EstimateMintBySwapInResponse {
+    const message = createBaseEstimateMintBySwapInResponse();
     message.backingIn =
       object.backingIn !== undefined && object.backingIn !== null
         ? Coin.fromPartial(object.backingIn)
@@ -1411,33 +1436,33 @@ export const QueryMintBySwapRequirementResponse = {
   },
 };
 
-function createBaseQueryMintBySwapCapacityRequest(): QueryMintBySwapCapacityRequest {
-  return { backingAvail: undefined, lionAvail: undefined };
+function createBaseEstimateMintBySwapOutRequest(): EstimateMintBySwapOutRequest {
+  return { backingInMax: undefined, lionInMax: undefined };
 }
 
-export const QueryMintBySwapCapacityRequest = {
-  encode(message: QueryMintBySwapCapacityRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.backingAvail !== undefined) {
-      Coin.encode(message.backingAvail, writer.uint32(10).fork()).ldelim();
+export const EstimateMintBySwapOutRequest = {
+  encode(message: EstimateMintBySwapOutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.backingInMax !== undefined) {
+      Coin.encode(message.backingInMax, writer.uint32(10).fork()).ldelim();
     }
-    if (message.lionAvail !== undefined) {
-      Coin.encode(message.lionAvail, writer.uint32(18).fork()).ldelim();
+    if (message.lionInMax !== undefined) {
+      Coin.encode(message.lionInMax, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintBySwapCapacityRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintBySwapOutRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryMintBySwapCapacityRequest();
+    const message = createBaseEstimateMintBySwapOutRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.backingAvail = Coin.decode(reader, reader.uint32());
+          message.backingInMax = Coin.decode(reader, reader.uint32());
           break;
         case 2:
-          message.lionAvail = Coin.decode(reader, reader.uint32());
+          message.lionInMax = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1447,44 +1472,44 @@ export const QueryMintBySwapCapacityRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryMintBySwapCapacityRequest {
+  fromJSON(object: any): EstimateMintBySwapOutRequest {
     return {
-      backingAvail: isSet(object.backingAvail) ? Coin.fromJSON(object.backingAvail) : undefined,
-      lionAvail: isSet(object.lionAvail) ? Coin.fromJSON(object.lionAvail) : undefined,
+      backingInMax: isSet(object.backingInMax) ? Coin.fromJSON(object.backingInMax) : undefined,
+      lionInMax: isSet(object.lionInMax) ? Coin.fromJSON(object.lionInMax) : undefined,
     };
   },
 
-  toJSON(message: QueryMintBySwapCapacityRequest): unknown {
+  toJSON(message: EstimateMintBySwapOutRequest): unknown {
     const obj: any = {};
-    message.backingAvail !== undefined &&
-      (obj.backingAvail = message.backingAvail ? Coin.toJSON(message.backingAvail) : undefined);
-    message.lionAvail !== undefined &&
-      (obj.lionAvail = message.lionAvail ? Coin.toJSON(message.lionAvail) : undefined);
+    message.backingInMax !== undefined &&
+      (obj.backingInMax = message.backingInMax ? Coin.toJSON(message.backingInMax) : undefined);
+    message.lionInMax !== undefined &&
+      (obj.lionInMax = message.lionInMax ? Coin.toJSON(message.lionInMax) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryMintBySwapCapacityRequest>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EstimateMintBySwapOutRequest>, I>>(
     object: I,
-  ): QueryMintBySwapCapacityRequest {
-    const message = createBaseQueryMintBySwapCapacityRequest();
-    message.backingAvail =
-      object.backingAvail !== undefined && object.backingAvail !== null
-        ? Coin.fromPartial(object.backingAvail)
+  ): EstimateMintBySwapOutRequest {
+    const message = createBaseEstimateMintBySwapOutRequest();
+    message.backingInMax =
+      object.backingInMax !== undefined && object.backingInMax !== null
+        ? Coin.fromPartial(object.backingInMax)
         : undefined;
-    message.lionAvail =
-      object.lionAvail !== undefined && object.lionAvail !== null
-        ? Coin.fromPartial(object.lionAvail)
+    message.lionInMax =
+      object.lionInMax !== undefined && object.lionInMax !== null
+        ? Coin.fromPartial(object.lionInMax)
         : undefined;
     return message;
   },
 };
 
-function createBaseQueryMintBySwapCapacityResponse(): QueryMintBySwapCapacityResponse {
+function createBaseEstimateMintBySwapOutResponse(): EstimateMintBySwapOutResponse {
   return { backingIn: undefined, lionIn: undefined, mintOut: undefined, mintFee: undefined };
 }
 
-export const QueryMintBySwapCapacityResponse = {
-  encode(message: QueryMintBySwapCapacityResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateMintBySwapOutResponse = {
+  encode(message: EstimateMintBySwapOutResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingIn !== undefined) {
       Coin.encode(message.backingIn, writer.uint32(10).fork()).ldelim();
     }
@@ -1500,10 +1525,10 @@ export const QueryMintBySwapCapacityResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryMintBySwapCapacityResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintBySwapOutResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryMintBySwapCapacityResponse();
+    const message = createBaseEstimateMintBySwapOutResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1527,7 +1552,7 @@ export const QueryMintBySwapCapacityResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryMintBySwapCapacityResponse {
+  fromJSON(object: any): EstimateMintBySwapOutResponse {
     return {
       backingIn: isSet(object.backingIn) ? Coin.fromJSON(object.backingIn) : undefined,
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
@@ -1536,7 +1561,7 @@ export const QueryMintBySwapCapacityResponse = {
     };
   },
 
-  toJSON(message: QueryMintBySwapCapacityResponse): unknown {
+  toJSON(message: EstimateMintBySwapOutResponse): unknown {
     const obj: any = {};
     message.backingIn !== undefined &&
       (obj.backingIn = message.backingIn ? Coin.toJSON(message.backingIn) : undefined);
@@ -1548,10 +1573,10 @@ export const QueryMintBySwapCapacityResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryMintBySwapCapacityResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EstimateMintBySwapOutResponse>, I>>(
     object: I,
-  ): QueryMintBySwapCapacityResponse {
-    const message = createBaseQueryMintBySwapCapacityResponse();
+  ): EstimateMintBySwapOutResponse {
+    const message = createBaseEstimateMintBySwapOutResponse();
     message.backingIn =
       object.backingIn !== undefined && object.backingIn !== null
         ? Coin.fromPartial(object.backingIn)
@@ -1566,14 +1591,14 @@ export const QueryMintBySwapCapacityResponse = {
   },
 };
 
-function createBaseQueryBurnBySwapRequest(): QueryBurnBySwapRequest {
-  return { burnTarget: undefined, backingDenom: "" };
+function createBaseEstimateBurnBySwapOutRequest(): EstimateBurnBySwapOutRequest {
+  return { burnIn: undefined, backingDenom: "" };
 }
 
-export const QueryBurnBySwapRequest = {
-  encode(message: QueryBurnBySwapRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.burnTarget !== undefined) {
-      Coin.encode(message.burnTarget, writer.uint32(10).fork()).ldelim();
+export const EstimateBurnBySwapOutRequest = {
+  encode(message: EstimateBurnBySwapOutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.burnIn !== undefined) {
+      Coin.encode(message.burnIn, writer.uint32(10).fork()).ldelim();
     }
     if (message.backingDenom !== "") {
       writer.uint32(18).string(message.backingDenom);
@@ -1581,15 +1606,15 @@ export const QueryBurnBySwapRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBurnBySwapRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBurnBySwapOutRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryBurnBySwapRequest();
+    const message = createBaseEstimateBurnBySwapOutRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.burnTarget = Coin.decode(reader, reader.uint32());
+          message.burnIn = Coin.decode(reader, reader.uint32());
           break;
         case 2:
           message.backingDenom = reader.string();
@@ -1602,38 +1627,37 @@ export const QueryBurnBySwapRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryBurnBySwapRequest {
+  fromJSON(object: any): EstimateBurnBySwapOutRequest {
     return {
-      burnTarget: isSet(object.burnTarget) ? Coin.fromJSON(object.burnTarget) : undefined,
+      burnIn: isSet(object.burnIn) ? Coin.fromJSON(object.burnIn) : undefined,
       backingDenom: isSet(object.backingDenom) ? String(object.backingDenom) : "",
     };
   },
 
-  toJSON(message: QueryBurnBySwapRequest): unknown {
+  toJSON(message: EstimateBurnBySwapOutRequest): unknown {
     const obj: any = {};
-    message.burnTarget !== undefined &&
-      (obj.burnTarget = message.burnTarget ? Coin.toJSON(message.burnTarget) : undefined);
+    message.burnIn !== undefined && (obj.burnIn = message.burnIn ? Coin.toJSON(message.burnIn) : undefined);
     message.backingDenom !== undefined && (obj.backingDenom = message.backingDenom);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryBurnBySwapRequest>, I>>(object: I): QueryBurnBySwapRequest {
-    const message = createBaseQueryBurnBySwapRequest();
-    message.burnTarget =
-      object.burnTarget !== undefined && object.burnTarget !== null
-        ? Coin.fromPartial(object.burnTarget)
-        : undefined;
+  fromPartial<I extends Exact<DeepPartial<EstimateBurnBySwapOutRequest>, I>>(
+    object: I,
+  ): EstimateBurnBySwapOutRequest {
+    const message = createBaseEstimateBurnBySwapOutRequest();
+    message.burnIn =
+      object.burnIn !== undefined && object.burnIn !== null ? Coin.fromPartial(object.burnIn) : undefined;
     message.backingDenom = object.backingDenom ?? "";
     return message;
   },
 };
 
-function createBaseQueryBurnBySwapResponse(): QueryBurnBySwapResponse {
+function createBaseEstimateBurnBySwapOutResponse(): EstimateBurnBySwapOutResponse {
   return { backingOut: undefined, lionOut: undefined, burnFee: undefined };
 }
 
-export const QueryBurnBySwapResponse = {
-  encode(message: QueryBurnBySwapResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateBurnBySwapOutResponse = {
+  encode(message: EstimateBurnBySwapOutResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingOut !== undefined) {
       Coin.encode(message.backingOut, writer.uint32(10).fork()).ldelim();
     }
@@ -1646,10 +1670,10 @@ export const QueryBurnBySwapResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBurnBySwapResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBurnBySwapOutResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryBurnBySwapResponse();
+    const message = createBaseEstimateBurnBySwapOutResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1670,7 +1694,7 @@ export const QueryBurnBySwapResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryBurnBySwapResponse {
+  fromJSON(object: any): EstimateBurnBySwapOutResponse {
     return {
       backingOut: isSet(object.backingOut) ? Coin.fromJSON(object.backingOut) : undefined,
       lionOut: isSet(object.lionOut) ? Coin.fromJSON(object.lionOut) : undefined,
@@ -1678,7 +1702,7 @@ export const QueryBurnBySwapResponse = {
     };
   },
 
-  toJSON(message: QueryBurnBySwapResponse): unknown {
+  toJSON(message: EstimateBurnBySwapOutResponse): unknown {
     const obj: any = {};
     message.backingOut !== undefined &&
       (obj.backingOut = message.backingOut ? Coin.toJSON(message.backingOut) : undefined);
@@ -1689,8 +1713,10 @@ export const QueryBurnBySwapResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryBurnBySwapResponse>, I>>(object: I): QueryBurnBySwapResponse {
-    const message = createBaseQueryBurnBySwapResponse();
+  fromPartial<I extends Exact<DeepPartial<EstimateBurnBySwapOutResponse>, I>>(
+    object: I,
+  ): EstimateBurnBySwapOutResponse {
+    const message = createBaseEstimateBurnBySwapOutResponse();
     message.backingOut =
       object.backingOut !== undefined && object.backingOut !== null
         ? Coin.fromPartial(object.backingOut)
@@ -1703,12 +1729,12 @@ export const QueryBurnBySwapResponse = {
   },
 };
 
-function createBaseQueryBuyBackingRequest(): QueryBuyBackingRequest {
+function createBaseEstimateBuyBackingOutRequest(): EstimateBuyBackingOutRequest {
   return { lionIn: undefined, backingDenom: "" };
 }
 
-export const QueryBuyBackingRequest = {
-  encode(message: QueryBuyBackingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateBuyBackingOutRequest = {
+  encode(message: EstimateBuyBackingOutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lionIn !== undefined) {
       Coin.encode(message.lionIn, writer.uint32(10).fork()).ldelim();
     }
@@ -1718,10 +1744,10 @@ export const QueryBuyBackingRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBuyBackingRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBuyBackingOutRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryBuyBackingRequest();
+    const message = createBaseEstimateBuyBackingOutRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1739,22 +1765,24 @@ export const QueryBuyBackingRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryBuyBackingRequest {
+  fromJSON(object: any): EstimateBuyBackingOutRequest {
     return {
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
       backingDenom: isSet(object.backingDenom) ? String(object.backingDenom) : "",
     };
   },
 
-  toJSON(message: QueryBuyBackingRequest): unknown {
+  toJSON(message: EstimateBuyBackingOutRequest): unknown {
     const obj: any = {};
     message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
     message.backingDenom !== undefined && (obj.backingDenom = message.backingDenom);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryBuyBackingRequest>, I>>(object: I): QueryBuyBackingRequest {
-    const message = createBaseQueryBuyBackingRequest();
+  fromPartial<I extends Exact<DeepPartial<EstimateBuyBackingOutRequest>, I>>(
+    object: I,
+  ): EstimateBuyBackingOutRequest {
+    const message = createBaseEstimateBuyBackingOutRequest();
     message.lionIn =
       object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
     message.backingDenom = object.backingDenom ?? "";
@@ -1762,12 +1790,12 @@ export const QueryBuyBackingRequest = {
   },
 };
 
-function createBaseQueryBuyBackingResponse(): QueryBuyBackingResponse {
+function createBaseEstimateBuyBackingOutResponse(): EstimateBuyBackingOutResponse {
   return { backingOut: undefined, buybackFee: undefined };
 }
 
-export const QueryBuyBackingResponse = {
-  encode(message: QueryBuyBackingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateBuyBackingOutResponse = {
+  encode(message: EstimateBuyBackingOutResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingOut !== undefined) {
       Coin.encode(message.backingOut, writer.uint32(10).fork()).ldelim();
     }
@@ -1777,10 +1805,10 @@ export const QueryBuyBackingResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QueryBuyBackingResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBuyBackingOutResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQueryBuyBackingResponse();
+    const message = createBaseEstimateBuyBackingOutResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1798,14 +1826,14 @@ export const QueryBuyBackingResponse = {
     return message;
   },
 
-  fromJSON(object: any): QueryBuyBackingResponse {
+  fromJSON(object: any): EstimateBuyBackingOutResponse {
     return {
       backingOut: isSet(object.backingOut) ? Coin.fromJSON(object.backingOut) : undefined,
       buybackFee: isSet(object.buybackFee) ? Coin.fromJSON(object.buybackFee) : undefined,
     };
   },
 
-  toJSON(message: QueryBuyBackingResponse): unknown {
+  toJSON(message: EstimateBuyBackingOutResponse): unknown {
     const obj: any = {};
     message.backingOut !== undefined &&
       (obj.backingOut = message.backingOut ? Coin.toJSON(message.backingOut) : undefined);
@@ -1814,8 +1842,10 @@ export const QueryBuyBackingResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QueryBuyBackingResponse>, I>>(object: I): QueryBuyBackingResponse {
-    const message = createBaseQueryBuyBackingResponse();
+  fromPartial<I extends Exact<DeepPartial<EstimateBuyBackingOutResponse>, I>>(
+    object: I,
+  ): EstimateBuyBackingOutResponse {
+    const message = createBaseEstimateBuyBackingOutResponse();
     message.backingOut =
       object.backingOut !== undefined && object.backingOut !== null
         ? Coin.fromPartial(object.backingOut)
@@ -1828,22 +1858,22 @@ export const QueryBuyBackingResponse = {
   },
 };
 
-function createBaseQuerySellBackingRequest(): QuerySellBackingRequest {
+function createBaseEstimateSellBackingOutRequest(): EstimateSellBackingOutRequest {
   return { backingIn: undefined };
 }
 
-export const QuerySellBackingRequest = {
-  encode(message: QuerySellBackingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateSellBackingOutRequest = {
+  encode(message: EstimateSellBackingOutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingIn !== undefined) {
       Coin.encode(message.backingIn, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QuerySellBackingRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateSellBackingOutRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQuerySellBackingRequest();
+    const message = createBaseEstimateSellBackingOutRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1858,21 +1888,23 @@ export const QuerySellBackingRequest = {
     return message;
   },
 
-  fromJSON(object: any): QuerySellBackingRequest {
+  fromJSON(object: any): EstimateSellBackingOutRequest {
     return {
       backingIn: isSet(object.backingIn) ? Coin.fromJSON(object.backingIn) : undefined,
     };
   },
 
-  toJSON(message: QuerySellBackingRequest): unknown {
+  toJSON(message: EstimateSellBackingOutRequest): unknown {
     const obj: any = {};
     message.backingIn !== undefined &&
       (obj.backingIn = message.backingIn ? Coin.toJSON(message.backingIn) : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QuerySellBackingRequest>, I>>(object: I): QuerySellBackingRequest {
-    const message = createBaseQuerySellBackingRequest();
+  fromPartial<I extends Exact<DeepPartial<EstimateSellBackingOutRequest>, I>>(
+    object: I,
+  ): EstimateSellBackingOutRequest {
+    const message = createBaseEstimateSellBackingOutRequest();
     message.backingIn =
       object.backingIn !== undefined && object.backingIn !== null
         ? Coin.fromPartial(object.backingIn)
@@ -1881,12 +1913,12 @@ export const QuerySellBackingRequest = {
   },
 };
 
-function createBaseQuerySellBackingResponse(): QuerySellBackingResponse {
+function createBaseEstimateSellBackingOutResponse(): EstimateSellBackingOutResponse {
   return { lionOut: undefined, sellbackFee: undefined };
 }
 
-export const QuerySellBackingResponse = {
-  encode(message: QuerySellBackingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EstimateSellBackingOutResponse = {
+  encode(message: EstimateSellBackingOutResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lionOut !== undefined) {
       Coin.encode(message.lionOut, writer.uint32(10).fork()).ldelim();
     }
@@ -1896,10 +1928,10 @@ export const QuerySellBackingResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): QuerySellBackingResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateSellBackingOutResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQuerySellBackingResponse();
+    const message = createBaseEstimateSellBackingOutResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1917,14 +1949,14 @@ export const QuerySellBackingResponse = {
     return message;
   },
 
-  fromJSON(object: any): QuerySellBackingResponse {
+  fromJSON(object: any): EstimateSellBackingOutResponse {
     return {
       lionOut: isSet(object.lionOut) ? Coin.fromJSON(object.lionOut) : undefined,
       sellbackFee: isSet(object.sellbackFee) ? Coin.fromJSON(object.sellbackFee) : undefined,
     };
   },
 
-  toJSON(message: QuerySellBackingResponse): unknown {
+  toJSON(message: EstimateSellBackingOutResponse): unknown {
     const obj: any = {};
     message.lionOut !== undefined &&
       (obj.lionOut = message.lionOut ? Coin.toJSON(message.lionOut) : undefined);
@@ -1933,15 +1965,391 @@ export const QuerySellBackingResponse = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<QuerySellBackingResponse>, I>>(
+  fromPartial<I extends Exact<DeepPartial<EstimateSellBackingOutResponse>, I>>(
     object: I,
-  ): QuerySellBackingResponse {
-    const message = createBaseQuerySellBackingResponse();
+  ): EstimateSellBackingOutResponse {
+    const message = createBaseEstimateSellBackingOutResponse();
     message.lionOut =
       object.lionOut !== undefined && object.lionOut !== null ? Coin.fromPartial(object.lionOut) : undefined;
     message.sellbackFee =
       object.sellbackFee !== undefined && object.sellbackFee !== null
         ? Coin.fromPartial(object.sellbackFee)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseEstimateMintByCollateralInRequest(): EstimateMintByCollateralInRequest {
+  return { sender: "", mintOut: undefined, collateralDenom: "", lionInMax: undefined };
+}
+
+export const EstimateMintByCollateralInRequest = {
+  encode(message: EstimateMintByCollateralInRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sender !== "") {
+      writer.uint32(10).string(message.sender);
+    }
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.collateralDenom !== "") {
+      writer.uint32(26).string(message.collateralDenom);
+    }
+    if (message.lionInMax !== undefined) {
+      Coin.encode(message.lionInMax, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintByCollateralInRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateMintByCollateralInRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.sender = reader.string();
+          break;
+        case 2:
+          message.mintOut = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.collateralDenom = reader.string();
+          break;
+        case 4:
+          message.lionInMax = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateMintByCollateralInRequest {
+    return {
+      sender: isSet(object.sender) ? String(object.sender) : "",
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      collateralDenom: isSet(object.collateralDenom) ? String(object.collateralDenom) : "",
+      lionInMax: isSet(object.lionInMax) ? Coin.fromJSON(object.lionInMax) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateMintByCollateralInRequest): unknown {
+    const obj: any = {};
+    message.sender !== undefined && (obj.sender = message.sender);
+    message.mintOut !== undefined &&
+      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
+    message.collateralDenom !== undefined && (obj.collateralDenom = message.collateralDenom);
+    message.lionInMax !== undefined &&
+      (obj.lionInMax = message.lionInMax ? Coin.toJSON(message.lionInMax) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateMintByCollateralInRequest>, I>>(
+    object: I,
+  ): EstimateMintByCollateralInRequest {
+    const message = createBaseEstimateMintByCollateralInRequest();
+    message.sender = object.sender ?? "";
+    message.mintOut =
+      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
+    message.collateralDenom = object.collateralDenom ?? "";
+    message.lionInMax =
+      object.lionInMax !== undefined && object.lionInMax !== null
+        ? Coin.fromPartial(object.lionInMax)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseEstimateMintByCollateralInResponse(): EstimateMintByCollateralInResponse {
+  return {
+    lionIn: undefined,
+    mintFee: undefined,
+    totalColl: undefined,
+    poolColl: undefined,
+    accColl: undefined,
+  };
+}
+
+export const EstimateMintByCollateralInResponse = {
+  encode(message: EstimateMintByCollateralInResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.lionIn !== undefined) {
+      Coin.encode(message.lionIn, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.mintFee !== undefined) {
+      Coin.encode(message.mintFee, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.totalColl !== undefined) {
+      TotalCollateral.encode(message.totalColl, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.poolColl !== undefined) {
+      PoolCollateral.encode(message.poolColl, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.accColl !== undefined) {
+      AccountCollateral.encode(message.accColl, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintByCollateralInResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateMintByCollateralInResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.lionIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.mintFee = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.totalColl = TotalCollateral.decode(reader, reader.uint32());
+          break;
+        case 4:
+          message.poolColl = PoolCollateral.decode(reader, reader.uint32());
+          break;
+        case 5:
+          message.accColl = AccountCollateral.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateMintByCollateralInResponse {
+    return {
+      lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
+      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
+      totalColl: isSet(object.totalColl) ? TotalCollateral.fromJSON(object.totalColl) : undefined,
+      poolColl: isSet(object.poolColl) ? PoolCollateral.fromJSON(object.poolColl) : undefined,
+      accColl: isSet(object.accColl) ? AccountCollateral.fromJSON(object.accColl) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateMintByCollateralInResponse): unknown {
+    const obj: any = {};
+    message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
+    message.mintFee !== undefined &&
+      (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
+    message.totalColl !== undefined &&
+      (obj.totalColl = message.totalColl ? TotalCollateral.toJSON(message.totalColl) : undefined);
+    message.poolColl !== undefined &&
+      (obj.poolColl = message.poolColl ? PoolCollateral.toJSON(message.poolColl) : undefined);
+    message.accColl !== undefined &&
+      (obj.accColl = message.accColl ? AccountCollateral.toJSON(message.accColl) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateMintByCollateralInResponse>, I>>(
+    object: I,
+  ): EstimateMintByCollateralInResponse {
+    const message = createBaseEstimateMintByCollateralInResponse();
+    message.lionIn =
+      object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
+    message.mintFee =
+      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
+    message.totalColl =
+      object.totalColl !== undefined && object.totalColl !== null
+        ? TotalCollateral.fromPartial(object.totalColl)
+        : undefined;
+    message.poolColl =
+      object.poolColl !== undefined && object.poolColl !== null
+        ? PoolCollateral.fromPartial(object.poolColl)
+        : undefined;
+    message.accColl =
+      object.accColl !== undefined && object.accColl !== null
+        ? AccountCollateral.fromPartial(object.accColl)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseEstimateBurnByCollateralInRequest(): EstimateBurnByCollateralInRequest {
+  return { sender: "", collateralDenom: "", repayInMax: undefined };
+}
+
+export const EstimateBurnByCollateralInRequest = {
+  encode(message: EstimateBurnByCollateralInRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sender !== "") {
+      writer.uint32(10).string(message.sender);
+    }
+    if (message.collateralDenom !== "") {
+      writer.uint32(18).string(message.collateralDenom);
+    }
+    if (message.repayInMax !== undefined) {
+      Coin.encode(message.repayInMax, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBurnByCollateralInRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateBurnByCollateralInRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.sender = reader.string();
+          break;
+        case 2:
+          message.collateralDenom = reader.string();
+          break;
+        case 3:
+          message.repayInMax = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateBurnByCollateralInRequest {
+    return {
+      sender: isSet(object.sender) ? String(object.sender) : "",
+      collateralDenom: isSet(object.collateralDenom) ? String(object.collateralDenom) : "",
+      repayInMax: isSet(object.repayInMax) ? Coin.fromJSON(object.repayInMax) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateBurnByCollateralInRequest): unknown {
+    const obj: any = {};
+    message.sender !== undefined && (obj.sender = message.sender);
+    message.collateralDenom !== undefined && (obj.collateralDenom = message.collateralDenom);
+    message.repayInMax !== undefined &&
+      (obj.repayInMax = message.repayInMax ? Coin.toJSON(message.repayInMax) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateBurnByCollateralInRequest>, I>>(
+    object: I,
+  ): EstimateBurnByCollateralInRequest {
+    const message = createBaseEstimateBurnByCollateralInRequest();
+    message.sender = object.sender ?? "";
+    message.collateralDenom = object.collateralDenom ?? "";
+    message.repayInMax =
+      object.repayInMax !== undefined && object.repayInMax !== null
+        ? Coin.fromPartial(object.repayInMax)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseEstimateBurnByCollateralInResponse(): EstimateBurnByCollateralInResponse {
+  return {
+    repayIn: undefined,
+    interestFee: undefined,
+    totalColl: undefined,
+    poolColl: undefined,
+    accColl: undefined,
+  };
+}
+
+export const EstimateBurnByCollateralInResponse = {
+  encode(message: EstimateBurnByCollateralInResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.repayIn !== undefined) {
+      Coin.encode(message.repayIn, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.interestFee !== undefined) {
+      Coin.encode(message.interestFee, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.totalColl !== undefined) {
+      TotalCollateral.encode(message.totalColl, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.poolColl !== undefined) {
+      PoolCollateral.encode(message.poolColl, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.accColl !== undefined) {
+      AccountCollateral.encode(message.accColl, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateBurnByCollateralInResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateBurnByCollateralInResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.repayIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.interestFee = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.totalColl = TotalCollateral.decode(reader, reader.uint32());
+          break;
+        case 4:
+          message.poolColl = PoolCollateral.decode(reader, reader.uint32());
+          break;
+        case 5:
+          message.accColl = AccountCollateral.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateBurnByCollateralInResponse {
+    return {
+      repayIn: isSet(object.repayIn) ? Coin.fromJSON(object.repayIn) : undefined,
+      interestFee: isSet(object.interestFee) ? Coin.fromJSON(object.interestFee) : undefined,
+      totalColl: isSet(object.totalColl) ? TotalCollateral.fromJSON(object.totalColl) : undefined,
+      poolColl: isSet(object.poolColl) ? PoolCollateral.fromJSON(object.poolColl) : undefined,
+      accColl: isSet(object.accColl) ? AccountCollateral.fromJSON(object.accColl) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateBurnByCollateralInResponse): unknown {
+    const obj: any = {};
+    message.repayIn !== undefined &&
+      (obj.repayIn = message.repayIn ? Coin.toJSON(message.repayIn) : undefined);
+    message.interestFee !== undefined &&
+      (obj.interestFee = message.interestFee ? Coin.toJSON(message.interestFee) : undefined);
+    message.totalColl !== undefined &&
+      (obj.totalColl = message.totalColl ? TotalCollateral.toJSON(message.totalColl) : undefined);
+    message.poolColl !== undefined &&
+      (obj.poolColl = message.poolColl ? PoolCollateral.toJSON(message.poolColl) : undefined);
+    message.accColl !== undefined &&
+      (obj.accColl = message.accColl ? AccountCollateral.toJSON(message.accColl) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateBurnByCollateralInResponse>, I>>(
+    object: I,
+  ): EstimateBurnByCollateralInResponse {
+    const message = createBaseEstimateBurnByCollateralInResponse();
+    message.repayIn =
+      object.repayIn !== undefined && object.repayIn !== null ? Coin.fromPartial(object.repayIn) : undefined;
+    message.interestFee =
+      object.interestFee !== undefined && object.interestFee !== null
+        ? Coin.fromPartial(object.interestFee)
+        : undefined;
+    message.totalColl =
+      object.totalColl !== undefined && object.totalColl !== null
+        ? TotalCollateral.fromPartial(object.totalColl)
+        : undefined;
+    message.poolColl =
+      object.poolColl !== undefined && object.poolColl !== null
+        ? PoolCollateral.fromPartial(object.poolColl)
+        : undefined;
+    message.accColl =
+      object.accColl !== undefined && object.accColl !== null
+        ? AccountCollateral.fromPartial(object.accColl)
         : undefined;
     return message;
   },
@@ -1969,34 +2377,28 @@ export interface Query {
   TotalBacking(request: QueryTotalBackingRequest): Promise<QueryTotalBackingResponse>;
   /** TotalCollateral queries the total collateral. */
   TotalCollateral(request: QueryTotalCollateralRequest): Promise<QueryTotalCollateralResponse>;
-  /** CollateralRatio queries the collateral ratio. */
-  CollateralRatio(request: QueryCollateralRatioRequest): Promise<QueryCollateralRatioResponse>;
+  /** BackingRatio queries the backing ratio. */
+  BackingRatio(request: QueryBackingRatioRequest): Promise<QueryBackingRatioResponse>;
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
-  /**
-   * MintBySwapRequirement queries requirement of backing and lion for the mint
-   * target.
-   */
-  MintBySwapRequirement(
-    request: QueryMintBySwapRequirementRequest,
-  ): Promise<QueryMintBySwapRequirementResponse>;
-  /**
-   * MintBySwapCapacity queries how much mer can be minted with provided backing
-   * and lion.
-   */
-  MintBySwapCapacity(request: QueryMintBySwapCapacityRequest): Promise<QueryMintBySwapCapacityResponse>;
-  /**
-   * QueryBurnBySwap queries how much backing and lion will be returned when mer
-   * is burned.
-   */
-  QueryBurnBySwap(request: QueryBurnBySwapRequest): Promise<QueryBurnBySwapResponse>;
-  /** QueryBuyBacking queries how much backing can be bought with provided lion. */
-  QueryBuyBacking(request: QueryBuyBackingRequest): Promise<QueryBuyBackingResponse>;
-  /**
-   * QuerySellBacking queries how much lion can be exchanged for provided
-   * backing.
-   */
-  QuerySellBacking(request: QuerySellBackingRequest): Promise<QuerySellBackingResponse>;
+  /** EstimateMintBySwapIn estimates input of minting by swap. */
+  EstimateMintBySwapIn(request: EstimateMintBySwapInRequest): Promise<EstimateMintBySwapInResponse>;
+  /** EstimateMintBySwapOut estimates output of minting by swap. */
+  EstimateMintBySwapOut(request: EstimateMintBySwapOutRequest): Promise<EstimateMintBySwapOutResponse>;
+  /** EstimateBurnBySwapOut estimates output of burning by swap. */
+  EstimateBurnBySwapOut(request: EstimateBurnBySwapOutRequest): Promise<EstimateBurnBySwapOutResponse>;
+  /** EstimateBuyBackingOut estimates output of buying backing assets. */
+  EstimateBuyBackingOut(request: EstimateBuyBackingOutRequest): Promise<EstimateBuyBackingOutResponse>;
+  /** EstimateSellBackingOut estimates output of selling backing assets. */
+  EstimateSellBackingOut(request: EstimateSellBackingOutRequest): Promise<EstimateSellBackingOutResponse>;
+  /** EstimateMintByCollateralIn estimates input of minting by collateral. */
+  EstimateMintByCollateralIn(
+    request: EstimateMintByCollateralInRequest,
+  ): Promise<EstimateMintByCollateralInResponse>;
+  /** EstimateBurnByCollateralIn estimates input of burning by collateral. */
+  EstimateBurnByCollateralIn(
+    request: EstimateBurnByCollateralInRequest,
+  ): Promise<EstimateBurnByCollateralInResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -2012,13 +2414,15 @@ export class QueryClientImpl implements Query {
     this.CollateralOfAccount = this.CollateralOfAccount.bind(this);
     this.TotalBacking = this.TotalBacking.bind(this);
     this.TotalCollateral = this.TotalCollateral.bind(this);
-    this.CollateralRatio = this.CollateralRatio.bind(this);
+    this.BackingRatio = this.BackingRatio.bind(this);
     this.Params = this.Params.bind(this);
-    this.MintBySwapRequirement = this.MintBySwapRequirement.bind(this);
-    this.MintBySwapCapacity = this.MintBySwapCapacity.bind(this);
-    this.QueryBurnBySwap = this.QueryBurnBySwap.bind(this);
-    this.QueryBuyBacking = this.QueryBuyBacking.bind(this);
-    this.QuerySellBacking = this.QuerySellBacking.bind(this);
+    this.EstimateMintBySwapIn = this.EstimateMintBySwapIn.bind(this);
+    this.EstimateMintBySwapOut = this.EstimateMintBySwapOut.bind(this);
+    this.EstimateBurnBySwapOut = this.EstimateBurnBySwapOut.bind(this);
+    this.EstimateBuyBackingOut = this.EstimateBuyBackingOut.bind(this);
+    this.EstimateSellBackingOut = this.EstimateSellBackingOut.bind(this);
+    this.EstimateMintByCollateralIn = this.EstimateMintByCollateralIn.bind(this);
+    this.EstimateBurnByCollateralIn = this.EstimateBurnByCollateralIn.bind(this);
   }
   AllBackingRiskParams(
     request: QueryAllBackingRiskParamsRequest,
@@ -2078,10 +2482,10 @@ export class QueryClientImpl implements Query {
     return promise.then((data) => QueryTotalCollateralResponse.decode(new _m0.Reader(data)));
   }
 
-  CollateralRatio(request: QueryCollateralRatioRequest): Promise<QueryCollateralRatioResponse> {
-    const data = QueryCollateralRatioRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "CollateralRatio", data);
-    return promise.then((data) => QueryCollateralRatioResponse.decode(new _m0.Reader(data)));
+  BackingRatio(request: QueryBackingRatioRequest): Promise<QueryBackingRatioResponse> {
+    const data = QueryBackingRatioRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "BackingRatio", data);
+    return promise.then((data) => QueryBackingRatioResponse.decode(new _m0.Reader(data)));
   }
 
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
@@ -2090,36 +2494,50 @@ export class QueryClientImpl implements Query {
     return promise.then((data) => QueryParamsResponse.decode(new _m0.Reader(data)));
   }
 
-  MintBySwapRequirement(
-    request: QueryMintBySwapRequirementRequest,
-  ): Promise<QueryMintBySwapRequirementResponse> {
-    const data = QueryMintBySwapRequirementRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "MintBySwapRequirement", data);
-    return promise.then((data) => QueryMintBySwapRequirementResponse.decode(new _m0.Reader(data)));
+  EstimateMintBySwapIn(request: EstimateMintBySwapInRequest): Promise<EstimateMintBySwapInResponse> {
+    const data = EstimateMintBySwapInRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateMintBySwapIn", data);
+    return promise.then((data) => EstimateMintBySwapInResponse.decode(new _m0.Reader(data)));
   }
 
-  MintBySwapCapacity(request: QueryMintBySwapCapacityRequest): Promise<QueryMintBySwapCapacityResponse> {
-    const data = QueryMintBySwapCapacityRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "MintBySwapCapacity", data);
-    return promise.then((data) => QueryMintBySwapCapacityResponse.decode(new _m0.Reader(data)));
+  EstimateMintBySwapOut(request: EstimateMintBySwapOutRequest): Promise<EstimateMintBySwapOutResponse> {
+    const data = EstimateMintBySwapOutRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateMintBySwapOut", data);
+    return promise.then((data) => EstimateMintBySwapOutResponse.decode(new _m0.Reader(data)));
   }
 
-  QueryBurnBySwap(request: QueryBurnBySwapRequest): Promise<QueryBurnBySwapResponse> {
-    const data = QueryBurnBySwapRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "QueryBurnBySwap", data);
-    return promise.then((data) => QueryBurnBySwapResponse.decode(new _m0.Reader(data)));
+  EstimateBurnBySwapOut(request: EstimateBurnBySwapOutRequest): Promise<EstimateBurnBySwapOutResponse> {
+    const data = EstimateBurnBySwapOutRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateBurnBySwapOut", data);
+    return promise.then((data) => EstimateBurnBySwapOutResponse.decode(new _m0.Reader(data)));
   }
 
-  QueryBuyBacking(request: QueryBuyBackingRequest): Promise<QueryBuyBackingResponse> {
-    const data = QueryBuyBackingRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "QueryBuyBacking", data);
-    return promise.then((data) => QueryBuyBackingResponse.decode(new _m0.Reader(data)));
+  EstimateBuyBackingOut(request: EstimateBuyBackingOutRequest): Promise<EstimateBuyBackingOutResponse> {
+    const data = EstimateBuyBackingOutRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateBuyBackingOut", data);
+    return promise.then((data) => EstimateBuyBackingOutResponse.decode(new _m0.Reader(data)));
   }
 
-  QuerySellBacking(request: QuerySellBackingRequest): Promise<QuerySellBackingResponse> {
-    const data = QuerySellBackingRequest.encode(request).finish();
-    const promise = this.rpc.request("merlion.maker.v1.Query", "QuerySellBacking", data);
-    return promise.then((data) => QuerySellBackingResponse.decode(new _m0.Reader(data)));
+  EstimateSellBackingOut(request: EstimateSellBackingOutRequest): Promise<EstimateSellBackingOutResponse> {
+    const data = EstimateSellBackingOutRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateSellBackingOut", data);
+    return promise.then((data) => EstimateSellBackingOutResponse.decode(new _m0.Reader(data)));
+  }
+
+  EstimateMintByCollateralIn(
+    request: EstimateMintByCollateralInRequest,
+  ): Promise<EstimateMintByCollateralInResponse> {
+    const data = EstimateMintByCollateralInRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateMintByCollateralIn", data);
+    return promise.then((data) => EstimateMintByCollateralInResponse.decode(new _m0.Reader(data)));
+  }
+
+  EstimateBurnByCollateralIn(
+    request: EstimateBurnByCollateralInRequest,
+  ): Promise<EstimateBurnByCollateralInResponse> {
+    const data = EstimateBurnByCollateralInRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateBurnByCollateralIn", data);
+    return promise.then((data) => EstimateBurnByCollateralInResponse.decode(new _m0.Reader(data)));
   }
 }
 
