@@ -1,13 +1,13 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import type Long from "long";
+import Long from "long";
 import { QueryClientImpl } from "../../proto/merlion/ve/v1/query";
 import type { Params } from "../../proto/merlion/ve/v1/genesis";
 
 export interface VeExtension {
   readonly ve: {
-    readonly totalVotingPower: (atTime: Long, atBlock: Long) => Promise<string>;
-    readonly votingPower: (veId: string, atTime: Long, atBlock: Long) => Promise<string>;
+    readonly totalVotingPower: (atTime: number, atBlock: number) => Promise<string>;
+    readonly votingPower: (veId: string, atTime: number, atBlock: number) => Promise<string>;
     readonly params: () => Promise<Params>;
   };
 }
@@ -19,15 +19,18 @@ export function setupVeExtension(base: QueryClient): VeExtension {
 
   return {
     ve: {
-      totalVotingPower: async (atTime: Long, atBlock: Long) => {
-        const { power } = await queryService.TotalVotingPower({ atTime, atBlock });
+      totalVotingPower: async (atTime: number, atBlock: number) => {
+        const { power } = await queryService.TotalVotingPower({
+          atTime: Long.fromNumber(atTime),
+          atBlock: Long.fromNumber(atBlock),
+        });
         return power;
       },
-      votingPower: async (veId: string, atTime: Long, atBlock: Long) => {
+      votingPower: async (veId: string, atTime: number, atBlock: number) => {
         const { power } = await queryService.VotingPower({
           veId,
-          atTime,
-          atBlock,
+          atTime: Long.fromNumber(atTime, true),
+          atBlock: Long.fromNumber(atBlock, true),
         });
         return power;
       },

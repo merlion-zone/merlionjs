@@ -1,7 +1,7 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
 import { QueryClientImpl } from "../../proto/merlion/oracle/v1/query";
-import type Long from "long";
+import Long from "long";
 import type { DecCoin } from "../../proto/cosmos/base/v1beta1/coin";
 import type {
   AggregateExchangeRatePrevote,
@@ -16,7 +16,7 @@ export interface OracleExtension {
     readonly actives: () => Promise<string[]>;
     readonly voteTargets: () => Promise<string[]>;
     readonly feederDelegation: (validatorAddr: string) => Promise<string>;
-    readonly missCounter: (validatorAddr: string) => Promise<Long>;
+    readonly missCounter: (validatorAddr: string) => Promise<number>;
     readonly aggregatePrevote: (validatorAddr: string) => Promise<AggregateExchangeRatePrevote>;
     readonly aggregatePrevotes: () => Promise<AggregateExchangeRatePrevote[]>;
     readonly aggregateVote: (validatorAddr: string) => Promise<AggregateExchangeRateVote>;
@@ -58,8 +58,7 @@ export function setupOracleExtension(base: QueryClient): OracleExtension {
       },
       missCounter: async (validatorAddr: string) => {
         const { missCounter } = await queryService.MissCounter({ validatorAddr });
-        assert(missCounter);
-        return missCounter;
+        return missCounter.toNumber();
       },
       aggregatePrevote: async (validatorAddr: string) => {
         const { aggregatePrevote } = await queryService.AggregatePrevote({ validatorAddr });
