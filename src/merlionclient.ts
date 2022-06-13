@@ -21,17 +21,15 @@ import {
 } from "@cosmjs/stargate";
 import {
   EncodeObject,
-  isOfflineDirectSigner,
   makeAuthInfoBytes,
   makeSignDoc,
-  OfflineSigner,
   Registry,
   TxBodyEncodeObject,
 } from "@cosmjs/proto-signing";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import { assert, assertDefined } from "@cosmjs/utils";
 import { makeSignDoc as makeSignDocAmino, Pubkey } from "@cosmjs/amino";
-import { fromBase64 } from "@cosmjs/encoding";
+import { fromBase64, toHex } from "@cosmjs/encoding";
 import { Int53, Uint53 } from "@cosmjs/math";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
@@ -49,9 +47,13 @@ import { accountFromAny } from "./account";
 import { setupTxExtension } from "./tx/queries";
 import { encodePubkey } from "./proto-signing/pubkey";
 import { SignDocAmino } from "./eip712";
+import { isOfflineDirectSigner, OfflineSigner } from "./proto-signing/signer";
+import { SequenceManager } from "./sequenceManager";
+import { TxMsgData } from "./proto/cosmos/base/abci/v1beta1/abci";
 
 export interface MerlionClientOptions extends SigningStargateClientOptions {
   readonly eip712Registry?: eip712.Registry;
+  readonly manageSequence?: boolean;
 }
 
 export interface SignerData extends StargateSignerData {
@@ -68,6 +70,7 @@ export class MerlionClient extends StargateClient {
   private readonly aminoTypes: AminoTypes;
   private readonly gasPrice: GasPrice | undefined;
   private readonly prefix: string;
+  private readonly sequenceManager: SequenceManager | undefined;
 
   private readonly _queryClient:
     | (QueryClient & AuthExtension & BankExtension & StakingExtension & TxExtension)
@@ -119,6 +122,9 @@ export class MerlionClient extends StargateClient {
     this.aminoTypes = options.aminoTypes!;
     this.gasPrice = options.gasPrice;
     this.prefix = options.prefix!;
+    if (options.manageSequence) {
+      this.sequenceManager = new SequenceManager();
+    }
     if (tmClient) {
       this._queryClient = QueryClient.withExtensions(
         tmClient,
@@ -172,7 +178,7 @@ export class MerlionClient extends StargateClient {
     senderAddress: string,
     recipientAddress: string,
     amount: readonly Coin[],
-    fee: StdFee | "auto" | number,
+    fee: StdFee | "auto" | number = "auto",
     memo = "",
   ): Promise<DeliverTxResponse> {
     const sendMsg: MsgSendEncodeObject = {
@@ -191,6 +197,7 @@ export class MerlionClient extends StargateClient {
     messages: readonly EncodeObject[],
     fee: StdFee | "auto" | number = "auto",
     memo = "",
+    block = false,
   ): Promise<DeliverTxResponse> {
     signerAddress = new Address(signerAddress).bech32(this.prefix);
     let usedFee: StdFee;
@@ -204,7 +211,52 @@ export class MerlionClient extends StargateClient {
     }
     const txRaw = await this.sign(signerAddress, messages, usedFee, memo);
     const txBytes = TxRaw.encode(txRaw).finish();
-    return this.broadcastTx(txBytes, this.broadcastTimeoutMs, this.broadcastPollIntervalMs);
+    return !block
+      ? this.broadcastTx(txBytes, this.broadcastTimeoutMs, this.broadcastPollIntervalMs)
+      : this.broadcastTxBlock(txBytes);
+  }
+
+  public async signAndBroadcastBlock(
+    signerAddress: string,
+    messages: readonly EncodeObject[],
+    fee: StdFee | "auto" | number = "auto",
+    memo = "",
+  ): Promise<DeliverTxResponse> {
+    return this.signAndBroadcast(signerAddress, messages, fee, memo, true);
+  }
+
+  public async broadcastTxBlock(tx: Uint8Array): Promise<DeliverTxResponse> {
+    const { height, hash, checkTx, deliverTx } = await this.forceGetTmClient().broadcastTxCommit({ tx });
+    if (checkTx.code) {
+      return Promise.reject(
+        new Error(
+          `Broadcasting transaction failed with code ${checkTx.code} (codespace: ${checkTx.codeSpace}). Log: ${checkTx.log}`,
+        ),
+      );
+    }
+    if (!deliverTx) {
+      return Promise.reject(new Error("Empty deliverTx while successful checkTx"));
+    }
+    if (deliverTx.code) {
+      return Promise.reject(
+        new Error(
+          `Broadcasting transaction failed with code ${deliverTx.code} (codespace: ${deliverTx.codeSpace}). Log: ${deliverTx.log}`,
+        ),
+      );
+    }
+    const transactionId = toHex(hash).toUpperCase();
+
+    const txMsgData = deliverTx.data ? TxMsgData.decode(deliverTx.data) : undefined;
+
+    return {
+      height,
+      code: deliverTx.code,
+      transactionHash: transactionId,
+      rawLog: deliverTx.log,
+      data: txMsgData?.data,
+      gasUsed: deliverTx.gasUsed,
+      gasWanted: deliverTx.gasWanted,
+    };
   }
 
   public async sign(
@@ -228,9 +280,17 @@ export class MerlionClient extends StargateClient {
         throw new Error("Account has no pubkey");
       }
       const chainId = await this.getChainId();
+
+      let seq = sequence;
+      if (this.sequenceManager) {
+        this.sequenceManager.mayInit(sequence);
+        seq = this.sequenceManager.getSequence();
+        this.sequenceManager.incrementSequence();
+      }
+
       signerData = {
         accountNumber: accountNumber,
-        sequence: sequence,
+        sequence: seq,
         chainId: chainId,
         pubkey: pubkey,
       };
@@ -382,6 +442,7 @@ export class MerlionClient extends StargateClient {
     if (!account) {
       return null;
     }
+
     if (account.pubkey) {
       return account;
     }

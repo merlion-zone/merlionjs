@@ -587,6 +587,7 @@ __metadata:
     "@types/long": ^4.0.1
     "@types/node": ^15.6.2
     cosmjs-types: ^0.4.0
+    decimal.js: ^10.3.1
     ethers: ^5.6.8
     long: ^4.0.0
     node-polyfill-webpack-plugin: ^1.1.4
@@ -1584,6 +1585,13 @@ __metadata:
     supports-color:
       optional: true
   checksum: 3dbad3f94ea64f34431a9cbf0bafb61853eda57bff2880036153438f50fb5a84f27683ba0d8e5426bf41a8c6ff03879488120cf5b3a761e77953169c0600a708
+  languageName: node
+  linkType: hard
+
+"decimal.js@npm:^10.3.1":
+  version: 10.3.1
+  resolution: "decimal.js@npm:10.3.1"
+  checksum: 0351ac9f05fe050f23227aa6a4573bee2d58fa7378fcf28d969a8c789525032effb488a90320fd3fe86a66e17b4bc507d811b15eada5b7f0e7ec5d2af4c24a59
   languageName: node
   linkType: hard
 

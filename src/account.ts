@@ -1,6 +1,7 @@
 import { Any } from "cosmjs-types/google/protobuf/any";
 import { Account } from "@cosmjs/stargate";
 import { BaseAccount, ModuleAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import { EthAccount } from "./proto/ethermint/types/v1/account";
 import { Uint64 } from "@cosmjs/math";
 import { assert } from "@cosmjs/utils";
 import {
@@ -39,6 +40,11 @@ export function accountFromAny(input: Any): Account {
 
     case "/cosmos.auth.v1beta1.BaseAccount":
       return accountFromBaseAccount(BaseAccount.decode(value));
+    case "/ethermint.types.v1.EthAccount": {
+      const baseAccount = EthAccount.decode(value).baseAccount;
+      assert(baseAccount);
+      return accountFromBaseAccount(baseAccount);
+    }
     case "/cosmos.auth.v1beta1.ModuleAccount": {
       const baseAccount = ModuleAccount.decode(value).baseAccount;
       assert(baseAccount);
