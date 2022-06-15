@@ -1,7 +1,6 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
 import { QueryClientImpl } from "../../proto/merlion/oracle/v1/query";
-import Long from "long";
 import type { DecCoin } from "../../proto/cosmos/base/v1beta1/coin";
 import type {
   AggregateExchangeRatePrevote,

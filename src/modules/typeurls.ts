@@ -1,3 +1,9 @@
+import {
+  MsgAggregateExchangeRatePrevote,
+  MsgAggregateExchangeRateVote,
+  MsgDelegateFeedConsent,
+} from "../proto/merlion/oracle/v1/tx";
+
 const typeUrls = {
   // bank
   MsgSend: "/cosmos.bank.v1beta1.MsgSend",
@@ -18,6 +24,10 @@ const typeUrls = {
   MsgDeposit: "/cosmos.gov.v1beta1.MsgDeposit",
   MsgSubmitProposal: "/cosmos.gov.v1beta1.MsgSubmitProposal",
   MsgVote: "/cosmos.gov.v1beta1.MsgVote",
+  // oracle
+  MsgAggregateExchangeRatePrevote: "/merlion.oracle.v1.MsgAggregateExchangeRatePrevote",
+  MsgAggregateExchangeRateVote: "/merlion.oracle.v1.MsgAggregateExchangeRateVote",
+  MsgDelegateFeedConsent: "/merlion.oracle.v1.MsgDelegateFeedConsent",
   // maker
   MsgMintBySwap: "/merlion.maker.v1.MsgMintBySwap",
   MsgBurnBySwap: "/merlion.maker.v1.MsgBurnBySwap",
@@ -34,7 +44,7 @@ const typeUrls = {
   MsgDelegate: "/cosmos.staking.v1beta1.MsgDelegate",
   MsgEditValidator: "/cosmos.staking.v1beta1.MsgEditValidator",
   MsgUndelegate: "/cosmos.staking.v1beta1.MsgUndelegate",
-  // staking
+  // vesting
   MsgCreateVestingAccount: "/cosmos.vesting.v1beta1.MsgCreateVestingAccount",
   // ibc
   MsgTransfer: "/ibc.applications.transfer.v1.MsgTransfer",

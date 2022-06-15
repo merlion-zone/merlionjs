@@ -83,6 +83,24 @@ export interface QueryVoteTargetsResponse {
 }
 
 /**
+ * QueryTargetsRequest is the request type for the Query/Targets RPC
+ * method.
+ */
+export interface QueryTargetsRequest {}
+
+/**
+ * QueryTargetsResponse is response type for the
+ * Query/Targets RPC method.
+ */
+export interface QueryTargetsResponse {
+  /**
+   * targets defines a list of the denomination which will be fed
+   * with price quotation (including voting targets).
+   */
+  targets: string[];
+}
+
+/**
  * QueryFeederDelegationRequest is the request type for the
  * Query/FeederDelegation RPC method.
  */
@@ -585,6 +603,98 @@ export const QueryVoteTargetsResponse = {
   ): QueryVoteTargetsResponse {
     const message = createBaseQueryVoteTargetsResponse();
     message.voteTargets = object.voteTargets?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseQueryTargetsRequest(): QueryTargetsRequest {
+  return {};
+}
+
+export const QueryTargetsRequest = {
+  encode(_: QueryTargetsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTargetsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTargetsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): QueryTargetsRequest {
+    return {};
+  },
+
+  toJSON(_: QueryTargetsRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTargetsRequest>, I>>(_: I): QueryTargetsRequest {
+    const message = createBaseQueryTargetsRequest();
+    return message;
+  },
+};
+
+function createBaseQueryTargetsResponse(): QueryTargetsResponse {
+  return { targets: [] };
+}
+
+export const QueryTargetsResponse = {
+  encode(message: QueryTargetsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.targets) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryTargetsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryTargetsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.targets.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryTargetsResponse {
+    return {
+      targets: Array.isArray(object?.targets) ? object.targets.map((e: any) => String(e)) : [],
+    };
+  },
+
+  toJSON(message: QueryTargetsResponse): unknown {
+    const obj: any = {};
+    if (message.targets) {
+      obj.targets = message.targets.map((e) => e);
+    } else {
+      obj.targets = [];
+    }
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryTargetsResponse>, I>>(object: I): QueryTargetsResponse {
+    const message = createBaseQueryTargetsResponse();
+    message.targets = object.targets?.map((e) => e) || [];
     return message;
   },
 };
@@ -1313,6 +1423,8 @@ export interface Query {
   Actives(request: QueryActivesRequest): Promise<QueryActivesResponse>;
   /** VoteTargets returns all vote target denoms. */
   VoteTargets(request: QueryVoteTargetsRequest): Promise<QueryVoteTargetsResponse>;
+  /** Targets returns all target denoms (including vote targets). */
+  Targets(request: QueryTargetsRequest): Promise<QueryTargetsResponse>;
   /** FeederDelegation returns feeder delegation of a validator. */
   FeederDelegation(request: QueryFeederDelegationRequest): Promise<QueryFeederDelegationResponse>;
   /** MissCounter returns oracle miss counter of a validator. */
@@ -1337,6 +1449,7 @@ export class QueryClientImpl implements Query {
     this.ExchangeRates = this.ExchangeRates.bind(this);
     this.Actives = this.Actives.bind(this);
     this.VoteTargets = this.VoteTargets.bind(this);
+    this.Targets = this.Targets.bind(this);
     this.FeederDelegation = this.FeederDelegation.bind(this);
     this.MissCounter = this.MissCounter.bind(this);
     this.AggregatePrevote = this.AggregatePrevote.bind(this);
@@ -1367,6 +1480,12 @@ export class QueryClientImpl implements Query {
     const data = QueryVoteTargetsRequest.encode(request).finish();
     const promise = this.rpc.request("merlion.oracle.v1.Query", "VoteTargets", data);
     return promise.then((data) => QueryVoteTargetsResponse.decode(new _m0.Reader(data)));
+  }
+
+  Targets(request: QueryTargetsRequest): Promise<QueryTargetsResponse> {
+    const data = QueryTargetsRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.oracle.v1.Query", "Targets", data);
+    return promise.then((data) => QueryTargetsResponse.decode(new _m0.Reader(data)));
   }
 
   FeederDelegation(request: QueryFeederDelegationRequest): Promise<QueryFeederDelegationResponse> {

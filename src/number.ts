@@ -62,7 +62,7 @@ export class Dec extends Decimal implements Number<Dec> {
   }
 
   public override toString(): string {
-    return this.toFixed(DEC_PRECISION);
+    return this.decimalPlaces() <= DEC_PRECISION ? this.toFixed() : this.toFixed(DEC_PRECISION);
   }
 
   public static withPrecision(value: Decimal.Value, precision: number): Dec {

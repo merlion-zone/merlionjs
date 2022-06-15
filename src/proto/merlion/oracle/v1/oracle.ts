@@ -4,21 +4,78 @@ import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "merlion.oracle.v1";
 
+/** TargetSource enumerates the quotation source of a target asset. */
+export enum TargetSource {
+  /** TARGET_SOURCE_UNSPECIFIED - TARGET_SOURCE_UNSPECIFIED defines an invalid/undefined target source. */
+  TARGET_SOURCE_UNSPECIFIED = 0,
+  /** TARGET_SOURCE_VALIDATORS - TARGET_SOURCE_VALIDATORS target quotation source is from validators. */
+  TARGET_SOURCE_VALIDATORS = 1,
+  /** TARGET_SOURCE_DEX - TARGET_SOURCE_DEX target quotation source is from on-chain DEX. */
+  TARGET_SOURCE_DEX = 2,
+  /**
+   * TARGET_SOURCE_INTERCHAIN_DEX - TARGET_SOURCE_INTERCHAIN_DEX target quotation source is from inter-chain
+   * DEX.
+   */
+  TARGET_SOURCE_INTERCHAIN_DEX = 3,
+  /**
+   * TARGET_SOURCE_INTERCHAIN_ORACLE - TARGET_SOURCE_INTERCHAIN_ORACLE target quotation source is from inter-chain
+   * oracle.
+   */
+  TARGET_SOURCE_INTERCHAIN_ORACLE = 4,
+  UNRECOGNIZED = -1,
+}
+
+export function targetSourceFromJSON(object: any): TargetSource {
+  switch (object) {
+    case 0:
+    case "TARGET_SOURCE_UNSPECIFIED":
+      return TargetSource.TARGET_SOURCE_UNSPECIFIED;
+    case 1:
+    case "TARGET_SOURCE_VALIDATORS":
+      return TargetSource.TARGET_SOURCE_VALIDATORS;
+    case 2:
+    case "TARGET_SOURCE_DEX":
+      return TargetSource.TARGET_SOURCE_DEX;
+    case 3:
+    case "TARGET_SOURCE_INTERCHAIN_DEX":
+      return TargetSource.TARGET_SOURCE_INTERCHAIN_DEX;
+    case 4:
+    case "TARGET_SOURCE_INTERCHAIN_ORACLE":
+      return TargetSource.TARGET_SOURCE_INTERCHAIN_ORACLE;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return TargetSource.UNRECOGNIZED;
+  }
+}
+
+export function targetSourceToJSON(object: TargetSource): string {
+  switch (object) {
+    case TargetSource.TARGET_SOURCE_UNSPECIFIED:
+      return "TARGET_SOURCE_UNSPECIFIED";
+    case TargetSource.TARGET_SOURCE_VALIDATORS:
+      return "TARGET_SOURCE_VALIDATORS";
+    case TargetSource.TARGET_SOURCE_DEX:
+      return "TARGET_SOURCE_DEX";
+    case TargetSource.TARGET_SOURCE_INTERCHAIN_DEX:
+      return "TARGET_SOURCE_INTERCHAIN_DEX";
+    case TargetSource.TARGET_SOURCE_INTERCHAIN_ORACLE:
+      return "TARGET_SOURCE_INTERCHAIN_ORACLE";
+    case TargetSource.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 /** Params defines the parameters for the oracle module. */
 export interface Params {
   votePeriod: Long;
   voteThreshold: string;
   rewardBand: string;
   rewardDistributionWindow: Long;
-  whitelist: Denom[];
   slashFraction: string;
   slashWindow: Long;
   minValidPerWindow: string;
-}
-
-/** Denom represents an object to hold configurations of each denom */
-export interface Denom {
-  name: string;
 }
 
 /**
@@ -48,13 +105,34 @@ export interface ExchangeRateTuple {
   exchangeRate: string;
 }
 
+/**
+ * RegisterTargetProposal is a gov Content type to register eligible
+ * target asset which will be price quoted.
+ */
+export interface RegisterTargetProposal {
+  /** title of the proposal */
+  title: string;
+  /** proposal description */
+  description: string;
+  /** target params */
+  targetParams?: TargetParams;
+}
+
+export interface TargetParams {
+  /** coin denom */
+  denom: string;
+  /** quotation source */
+  source: TargetSource;
+  /** quotation source DEX contract address */
+  sourceDexContract: string;
+}
+
 function createBaseParams(): Params {
   return {
     votePeriod: Long.UZERO,
     voteThreshold: "",
     rewardBand: "",
     rewardDistributionWindow: Long.UZERO,
-    whitelist: [],
     slashFraction: "",
     slashWindow: Long.UZERO,
     minValidPerWindow: "",
@@ -74,9 +152,6 @@ export const Params = {
     }
     if (!message.rewardDistributionWindow.isZero()) {
       writer.uint32(32).uint64(message.rewardDistributionWindow);
-    }
-    for (const v of message.whitelist) {
-      Denom.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     if (message.slashFraction !== "") {
       writer.uint32(50).string(message.slashFraction);
@@ -109,9 +184,6 @@ export const Params = {
         case 4:
           message.rewardDistributionWindow = reader.uint64() as Long;
           break;
-        case 5:
-          message.whitelist.push(Denom.decode(reader, reader.uint32()));
-          break;
         case 6:
           message.slashFraction = reader.string();
           break;
@@ -137,7 +209,6 @@ export const Params = {
       rewardDistributionWindow: isSet(object.rewardDistributionWindow)
         ? Long.fromValue(object.rewardDistributionWindow)
         : Long.UZERO,
-      whitelist: Array.isArray(object?.whitelist) ? object.whitelist.map((e: any) => Denom.fromJSON(e)) : [],
       slashFraction: isSet(object.slashFraction) ? String(object.slashFraction) : "",
       slashWindow: isSet(object.slashWindow) ? Long.fromValue(object.slashWindow) : Long.UZERO,
       minValidPerWindow: isSet(object.minValidPerWindow) ? String(object.minValidPerWindow) : "",
@@ -151,11 +222,6 @@ export const Params = {
     message.rewardBand !== undefined && (obj.rewardBand = message.rewardBand);
     message.rewardDistributionWindow !== undefined &&
       (obj.rewardDistributionWindow = (message.rewardDistributionWindow || Long.UZERO).toString());
-    if (message.whitelist) {
-      obj.whitelist = message.whitelist.map((e) => (e ? Denom.toJSON(e) : undefined));
-    } else {
-      obj.whitelist = [];
-    }
     message.slashFraction !== undefined && (obj.slashFraction = message.slashFraction);
     message.slashWindow !== undefined && (obj.slashWindow = (message.slashWindow || Long.UZERO).toString());
     message.minValidPerWindow !== undefined && (obj.minValidPerWindow = message.minValidPerWindow);
@@ -174,62 +240,12 @@ export const Params = {
       object.rewardDistributionWindow !== undefined && object.rewardDistributionWindow !== null
         ? Long.fromValue(object.rewardDistributionWindow)
         : Long.UZERO;
-    message.whitelist = object.whitelist?.map((e) => Denom.fromPartial(e)) || [];
     message.slashFraction = object.slashFraction ?? "";
     message.slashWindow =
       object.slashWindow !== undefined && object.slashWindow !== null
         ? Long.fromValue(object.slashWindow)
         : Long.UZERO;
     message.minValidPerWindow = object.minValidPerWindow ?? "";
-    return message;
-  },
-};
-
-function createBaseDenom(): Denom {
-  return { name: "" };
-}
-
-export const Denom = {
-  encode(message: Denom, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Denom {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDenom();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Denom {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-    };
-  },
-
-  toJSON(message: Denom): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Denom>, I>>(object: I): Denom {
-    const message = createBaseDenom();
-    message.name = object.name ?? "";
     return message;
   },
 };
@@ -429,6 +445,144 @@ export const ExchangeRateTuple = {
     const message = createBaseExchangeRateTuple();
     message.denom = object.denom ?? "";
     message.exchangeRate = object.exchangeRate ?? "";
+    return message;
+  },
+};
+
+function createBaseRegisterTargetProposal(): RegisterTargetProposal {
+  return { title: "", description: "", targetParams: undefined };
+}
+
+export const RegisterTargetProposal = {
+  encode(message: RegisterTargetProposal, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.description !== "") {
+      writer.uint32(18).string(message.description);
+    }
+    if (message.targetParams !== undefined) {
+      TargetParams.encode(message.targetParams, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegisterTargetProposal {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegisterTargetProposal();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.title = reader.string();
+          break;
+        case 2:
+          message.description = reader.string();
+          break;
+        case 3:
+          message.targetParams = TargetParams.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RegisterTargetProposal {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      targetParams: isSet(object.targetParams) ? TargetParams.fromJSON(object.targetParams) : undefined,
+    };
+  },
+
+  toJSON(message: RegisterTargetProposal): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.description !== undefined && (obj.description = message.description);
+    message.targetParams !== undefined &&
+      (obj.targetParams = message.targetParams ? TargetParams.toJSON(message.targetParams) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RegisterTargetProposal>, I>>(object: I): RegisterTargetProposal {
+    const message = createBaseRegisterTargetProposal();
+    message.title = object.title ?? "";
+    message.description = object.description ?? "";
+    message.targetParams =
+      object.targetParams !== undefined && object.targetParams !== null
+        ? TargetParams.fromPartial(object.targetParams)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseTargetParams(): TargetParams {
+  return { denom: "", source: 0, sourceDexContract: "" };
+}
+
+export const TargetParams = {
+  encode(message: TargetParams, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.denom !== "") {
+      writer.uint32(10).string(message.denom);
+    }
+    if (message.source !== 0) {
+      writer.uint32(16).int32(message.source);
+    }
+    if (message.sourceDexContract !== "") {
+      writer.uint32(26).string(message.sourceDexContract);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TargetParams {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTargetParams();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.denom = reader.string();
+          break;
+        case 2:
+          message.source = reader.int32() as any;
+          break;
+        case 3:
+          message.sourceDexContract = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TargetParams {
+    return {
+      denom: isSet(object.denom) ? String(object.denom) : "",
+      source: isSet(object.source) ? targetSourceFromJSON(object.source) : 0,
+      sourceDexContract: isSet(object.sourceDexContract) ? String(object.sourceDexContract) : "",
+    };
+  },
+
+  toJSON(message: TargetParams): unknown {
+    const obj: any = {};
+    message.denom !== undefined && (obj.denom = message.denom);
+    message.source !== undefined && (obj.source = targetSourceToJSON(message.source));
+    message.sourceDexContract !== undefined && (obj.sourceDexContract = message.sourceDexContract);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<TargetParams>, I>>(object: I): TargetParams {
+    const message = createBaseTargetParams();
+    message.denom = object.denom ?? "";
+    message.source = object.source ?? 0;
+    message.sourceDexContract = object.sourceDexContract ?? "";
     return message;
   },
 };
