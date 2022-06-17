@@ -1,4 +1,4 @@
-import { Coin as CosmCoin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+import { Coin as CosmCoin, DecCoin as CosmDecCoin } from "cosmjs-types/cosmos/base/v1beta1/coin";
 import { Dec, Int, Number } from "./number";
 
 /**
@@ -157,6 +157,17 @@ export class Coin implements Number<Coin> {
     return CosmCoin.fromPartial({
       denom: this.denom,
       amount: this.amount.toString(),
+    });
+  }
+
+  public static fromProtoDec(proto: CosmDecCoin): Coin {
+    return new Coin(proto.denom, Dec.fromProto(proto.amount));
+  }
+
+  public toProtoDec(): CosmDecCoin {
+    return CosmDecCoin.fromPartial({
+      denom: this.denom,
+      amount: this.amount.toProto(),
     });
   }
 }

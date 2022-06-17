@@ -1,6 +1,6 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { QueryClientImpl } from "../../proto/merlion/maker/v1/query";
+import { QueryBackingRatioResponse, QueryClientImpl } from "../../proto/merlion/maker/v1/query";
 import type {
   AccountCollateral,
   BackingRiskParams,
@@ -23,6 +23,7 @@ export interface MakerExtension {
     readonly collateralOfAccount: (account: string, collateralDenom: string) => Promise<AccountCollateral>;
     readonly totalBacking: () => Promise<TotalBacking>;
     readonly totalCollateral: () => Promise<TotalCollateral>;
+    readonly backingRatio: () => Promise<QueryBackingRatioResponse>;
     readonly params: () => Promise<Params>;
   };
 }
@@ -77,6 +78,11 @@ export function setupMakerExtension(base: QueryClient): MakerExtension {
         const { totalCollateral } = await queryService.TotalCollateral({});
         assert(totalCollateral);
         return totalCollateral;
+      },
+      backingRatio: async () => {
+        const resp = await queryService.BackingRatio({});
+        assert(resp);
+        return resp;
       },
       params: async () => {
         const { params } = await queryService.Params({});

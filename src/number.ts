@@ -58,15 +58,27 @@ export namespace Number {
 
 export class Dec extends Decimal implements Number<Dec> {
   constructor(arg?: Number.Input) {
-    super((arg ?? 0).toString());
-  }
-
-  public override toString(): string {
-    return this.decimalPlaces() <= DEC_PRECISION ? this.toFixed() : this.toFixed(DEC_PRECISION);
+    super(new Decimal((arg ?? 0).toString()).toDecimalPlaces(DEC_PRECISION, Decimal.ROUND_DOWN));
   }
 
   public static withPrecision(value: Decimal.Value, precision: number): Dec {
-    return new Dec(new Dec(value).div(Math.pow(10, precision)));
+    return new Dec(value).div(new Decimal(10).pow(precision));
+  }
+
+  public static fromProto(value: string): Dec {
+    const val = new Dec(value);
+    if (val.decimalPlaces() > 0) {
+      throw new Error("invalid proto Dec value");
+    }
+    return val.div(new Decimal(10).pow(DEC_PRECISION));
+  }
+
+  public toProto(): string {
+    return this.mul(new Decimal(10).pow(DEC_PRECISION)).toString();
+  }
+
+  public override toString(): string {
+    return this.toFixed();
   }
 
   // type conversion
@@ -126,6 +138,14 @@ export class Int extends _Int implements Number<Number.Output> {
   constructor(arg?: Number.Input) {
     const _arg = new Decimal((arg ?? 0).toString());
     super(_arg.divToInt(1));
+  }
+
+  public static fromProto(value: string): Int {
+    return new Int(value);
+  }
+
+  public toProto(): string {
+    return this.toString();
   }
 
   public override toString(): string {

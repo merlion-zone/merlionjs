@@ -1,4 +1,4 @@
-import { Coin as CosmCoin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+import { Coin as CosmCoin, DecCoin as CosmDecCoin } from "cosmjs-types/cosmos/base/v1beta1/coin";
 import { Coin } from "./coin";
 import { Number } from "./number";
 
@@ -212,6 +212,14 @@ export class Coins implements Number<Coins>, Iterable<Coin> {
 
   public toProto(): CosmCoin[] {
     return this.toArray().map((c) => c.toProto());
+  }
+
+  public static fromProtoDec(data: CosmDecCoin[] | null): Coins {
+    return new Coins((data ?? []).map(Coin.fromProtoDec));
+  }
+
+  public toProtoDec(): CosmDecCoin[] {
+    return this.toArray().map((c) => c.toProtoDec());
   }
 }
 

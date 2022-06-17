@@ -7,6 +7,7 @@ export * from "./coin";
 export * from "./coins";
 export { default as typeUrls } from "./modules/typeurls";
 export * as eip712 from "./eip712";
+export * from "./tendermintqueries";
 
 export {
   AminoMsgMintBySwap,
