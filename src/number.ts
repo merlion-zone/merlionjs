@@ -112,6 +112,16 @@ export class Dec extends Decimal implements Number<Dec> {
     const val = new Dec(Number.parse(other));
     return new Dec(super.mod(val));
   };
+
+  public mulPow = (other: Number.Input, base: Number.Input = 10): Dec => {
+    const val = new Dec(Number.parse(other));
+    return new Dec(super.mul(new Dec(base).pow(val)));
+  };
+
+  public divPow = (other: Number.Input, base: Number.Input = 10): Dec => {
+    const val = new Dec(Number.parse(other));
+    return new Dec(super.div(new Dec(base).pow(val)));
+  };
 }
 
 const _Int = Decimal.clone();
@@ -203,6 +213,24 @@ export class Int extends _Int implements Number<Number.Output> {
       return new Int(super.mod(val));
     }
   }
+
+  public mulPow = (other: Number.Input, base: Number.Input = 10): Number.Output => {
+    const val = Number.parse(other);
+    if (val instanceof Dec) {
+      return new Dec(this).mulPow(val, base);
+    } else {
+      return new Int(super.mul(new Int(base).pow(val)));
+    }
+  };
+
+  public divPow = (other: Number.Input, base: Number.Input = 10): Number.Output => {
+    const val = Number.parse(other);
+    if (val instanceof Dec) {
+      return new Dec(this).divPow(val, base);
+    } else {
+      return new Int(super.div(new Int(base).pow(val)));
+    }
+  };
 }
 
 /**

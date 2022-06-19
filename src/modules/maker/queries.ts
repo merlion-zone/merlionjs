@@ -1,6 +1,23 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { QueryBackingRatioResponse, QueryClientImpl } from "../../proto/merlion/maker/v1/query";
+import {
+  EstimateBurnByCollateralInRequest,
+  EstimateBurnByCollateralInResponse,
+  EstimateBurnBySwapOutRequest,
+  EstimateBurnBySwapOutResponse,
+  EstimateBuyBackingOutRequest,
+  EstimateBuyBackingOutResponse,
+  EstimateMintByCollateralInRequest,
+  EstimateMintByCollateralInResponse,
+  EstimateMintBySwapInRequest,
+  EstimateMintBySwapInResponse,
+  EstimateMintBySwapOutRequest,
+  EstimateMintBySwapOutResponse,
+  EstimateSellBackingOutRequest,
+  EstimateSellBackingOutResponse,
+  QueryBackingRatioResponse,
+  QueryClientImpl,
+} from "../../proto/merlion/maker/v1/query";
 import type {
   AccountCollateral,
   BackingRiskParams,
@@ -25,6 +42,27 @@ export interface MakerExtension {
     readonly totalCollateral: () => Promise<TotalCollateral>;
     readonly backingRatio: () => Promise<QueryBackingRatioResponse>;
     readonly params: () => Promise<Params>;
+    readonly estimateMintBySwapIn: (
+      request: EstimateMintBySwapInRequest,
+    ) => Promise<EstimateMintBySwapInResponse>;
+    readonly estimateMintBySwapOut: (
+      request: EstimateMintBySwapOutRequest,
+    ) => Promise<EstimateMintBySwapOutResponse>;
+    readonly estimateBurnBySwapOut: (
+      request: EstimateBurnBySwapOutRequest,
+    ) => Promise<EstimateBurnBySwapOutResponse>;
+    readonly estimateBuyBackingOut: (
+      request: EstimateBuyBackingOutRequest,
+    ) => Promise<EstimateBuyBackingOutResponse>;
+    readonly estimateSellBackingOut: (
+      request: EstimateSellBackingOutRequest,
+    ) => Promise<EstimateSellBackingOutResponse>;
+    readonly estimateMintByCollateralIn: (
+      request: EstimateMintByCollateralInRequest,
+    ) => Promise<EstimateMintByCollateralInResponse>;
+    readonly estimateBurnByCollateralIn: (
+      request: EstimateBurnByCollateralInRequest,
+    ) => Promise<EstimateBurnByCollateralInResponse>;
   };
 }
 
@@ -88,6 +126,55 @@ export function setupMakerExtension(base: QueryClient): MakerExtension {
         const { params } = await queryService.Params({});
         assert(params);
         return params;
+      },
+      estimateMintBySwapIn: async (
+        request: EstimateMintBySwapInRequest,
+      ): Promise<EstimateMintBySwapInResponse> => {
+        const resp = await queryService.EstimateMintBySwapIn(request);
+        assert(resp);
+        return resp;
+      },
+      estimateMintBySwapOut: async (
+        request: EstimateMintBySwapOutRequest,
+      ): Promise<EstimateMintBySwapOutResponse> => {
+        const resp = await queryService.EstimateMintBySwapOut(request);
+        assert(resp);
+        return resp;
+      },
+      estimateBurnBySwapOut: async (
+        request: EstimateBurnBySwapOutRequest,
+      ): Promise<EstimateBurnBySwapOutResponse> => {
+        const resp = await queryService.EstimateBurnBySwapOut(request);
+        assert(resp);
+        return resp;
+      },
+      estimateBuyBackingOut: async (
+        request: EstimateBuyBackingOutRequest,
+      ): Promise<EstimateBuyBackingOutResponse> => {
+        const resp = await queryService.EstimateBuyBackingOut(request);
+        assert(resp);
+        return resp;
+      },
+      estimateSellBackingOut: async (
+        request: EstimateSellBackingOutRequest,
+      ): Promise<EstimateSellBackingOutResponse> => {
+        const resp = await queryService.EstimateSellBackingOut(request);
+        assert(resp);
+        return resp;
+      },
+      estimateMintByCollateralIn: async (
+        request: EstimateMintByCollateralInRequest,
+      ): Promise<EstimateMintByCollateralInResponse> => {
+        const resp = await queryService.EstimateMintByCollateralIn(request);
+        assert(resp);
+        return resp;
+      },
+      estimateBurnByCollateralIn: async (
+        request: EstimateBurnByCollateralInRequest,
+      ): Promise<EstimateBurnByCollateralInResponse> => {
+        const resp = await queryService.EstimateBurnByCollateralIn(request);
+        assert(resp);
+        return resp;
       },
     },
   };
