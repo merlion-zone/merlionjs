@@ -175,7 +175,7 @@ export interface TotalCollateral {
    * interest
    */
   merDebt?: Coin;
-  /** total minted merl by burning lion */
+  /** total minted mer by burning lion */
   merByLion?: Coin;
   /** total burned lion */
   lionBurned?: Coin;
@@ -189,7 +189,7 @@ export interface PoolCollateral {
    * interest
    */
   merDebt?: Coin;
-  /** total minted merl by burning lion */
+  /** total minted mer by burning lion */
   merByLion?: Coin;
   /** total burned lion */
   lionBurned?: Coin;

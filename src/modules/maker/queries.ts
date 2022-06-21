@@ -1,10 +1,12 @@
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
 import {
-  EstimateBurnByCollateralInRequest,
-  EstimateBurnByCollateralInResponse,
+  EstimateBurnBySwapInRequest,
+  EstimateBurnBySwapInResponse,
   EstimateBurnBySwapOutRequest,
   EstimateBurnBySwapOutResponse,
+  EstimateBuyBackingInRequest,
+  EstimateBuyBackingInResponse,
   EstimateBuyBackingOutRequest,
   EstimateBuyBackingOutResponse,
   EstimateMintByCollateralInRequest,
@@ -48,9 +50,15 @@ export interface MakerExtension {
     readonly estimateMintBySwapOut: (
       request: EstimateMintBySwapOutRequest,
     ) => Promise<EstimateMintBySwapOutResponse>;
+    readonly estimateBurnBySwapIn: (
+      request: EstimateBurnBySwapInRequest,
+    ) => Promise<EstimateBurnBySwapInResponse>;
     readonly estimateBurnBySwapOut: (
       request: EstimateBurnBySwapOutRequest,
     ) => Promise<EstimateBurnBySwapOutResponse>;
+    readonly estimateBuyBackingIn: (
+      request: EstimateBuyBackingInRequest,
+    ) => Promise<EstimateBuyBackingInResponse>;
     readonly estimateBuyBackingOut: (
       request: EstimateBuyBackingOutRequest,
     ) => Promise<EstimateBuyBackingOutResponse>;
@@ -60,9 +68,6 @@ export interface MakerExtension {
     readonly estimateMintByCollateralIn: (
       request: EstimateMintByCollateralInRequest,
     ) => Promise<EstimateMintByCollateralInResponse>;
-    readonly estimateBurnByCollateralIn: (
-      request: EstimateBurnByCollateralInRequest,
-    ) => Promise<EstimateBurnByCollateralInResponse>;
   };
 }
 
@@ -141,10 +146,24 @@ export function setupMakerExtension(base: QueryClient): MakerExtension {
         assert(resp);
         return resp;
       },
+      estimateBurnBySwapIn: async (
+        request: EstimateBurnBySwapInRequest,
+      ): Promise<EstimateBurnBySwapInResponse> => {
+        const resp = await queryService.EstimateBurnBySwapIn(request);
+        assert(resp);
+        return resp;
+      },
       estimateBurnBySwapOut: async (
         request: EstimateBurnBySwapOutRequest,
       ): Promise<EstimateBurnBySwapOutResponse> => {
         const resp = await queryService.EstimateBurnBySwapOut(request);
+        assert(resp);
+        return resp;
+      },
+      estimateBuyBackingIn: async (
+        request: EstimateBuyBackingInRequest,
+      ): Promise<EstimateBuyBackingInResponse> => {
+        const resp = await queryService.EstimateBuyBackingIn(request);
         assert(resp);
         return resp;
       },
@@ -166,13 +185,6 @@ export function setupMakerExtension(base: QueryClient): MakerExtension {
         request: EstimateMintByCollateralInRequest,
       ): Promise<EstimateMintByCollateralInResponse> => {
         const resp = await queryService.EstimateMintByCollateralIn(request);
-        assert(resp);
-        return resp;
-      },
-      estimateBurnByCollateralIn: async (
-        request: EstimateBurnByCollateralInRequest,
-      ): Promise<EstimateBurnByCollateralInResponse> => {
-        const resp = await queryService.EstimateBurnByCollateralIn(request);
         assert(resp);
         return resp;
       },

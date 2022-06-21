@@ -9,16 +9,18 @@ export const protobufPackage = "merlion.maker.v1";
 export interface MsgMintBySwap {
   sender: string;
   to: string;
-  mintOut?: Coin;
+  fullBacking: boolean;
   backingInMax?: Coin;
   lionInMax?: Coin;
+  mintOutMin?: Coin;
 }
 
 /** MsgMintBySwapResponse defines the Msg/MintBySwap response type. */
 export interface MsgMintBySwapResponse {
-  mintFee?: Coin;
   backingIn?: Coin;
   lionIn?: Coin;
+  mintOut?: Coin;
+  mintFee?: Coin;
 }
 
 /** MsgBurnBySwap represents a message to burn Mer stablecoins by swapping. */
@@ -137,7 +139,14 @@ export interface MsgLiquidateCollateralResponse {
 }
 
 function createBaseMsgMintBySwap(): MsgMintBySwap {
-  return { sender: "", to: "", mintOut: undefined, backingInMax: undefined, lionInMax: undefined };
+  return {
+    sender: "",
+    to: "",
+    fullBacking: false,
+    backingInMax: undefined,
+    lionInMax: undefined,
+    mintOutMin: undefined,
+  };
 }
 
 export const MsgMintBySwap = {
@@ -148,14 +157,17 @@ export const MsgMintBySwap = {
     if (message.to !== "") {
       writer.uint32(18).string(message.to);
     }
-    if (message.mintOut !== undefined) {
-      Coin.encode(message.mintOut, writer.uint32(26).fork()).ldelim();
+    if (message.fullBacking === true) {
+      writer.uint32(24).bool(message.fullBacking);
     }
     if (message.backingInMax !== undefined) {
       Coin.encode(message.backingInMax, writer.uint32(34).fork()).ldelim();
     }
     if (message.lionInMax !== undefined) {
       Coin.encode(message.lionInMax, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.mintOutMin !== undefined) {
+      Coin.encode(message.mintOutMin, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -174,13 +186,16 @@ export const MsgMintBySwap = {
           message.to = reader.string();
           break;
         case 3:
-          message.mintOut = Coin.decode(reader, reader.uint32());
+          message.fullBacking = reader.bool();
           break;
         case 4:
           message.backingInMax = Coin.decode(reader, reader.uint32());
           break;
         case 5:
           message.lionInMax = Coin.decode(reader, reader.uint32());
+          break;
+        case 6:
+          message.mintOutMin = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -194,9 +209,10 @@ export const MsgMintBySwap = {
     return {
       sender: isSet(object.sender) ? String(object.sender) : "",
       to: isSet(object.to) ? String(object.to) : "",
-      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      fullBacking: isSet(object.fullBacking) ? Boolean(object.fullBacking) : false,
       backingInMax: isSet(object.backingInMax) ? Coin.fromJSON(object.backingInMax) : undefined,
       lionInMax: isSet(object.lionInMax) ? Coin.fromJSON(object.lionInMax) : undefined,
+      mintOutMin: isSet(object.mintOutMin) ? Coin.fromJSON(object.mintOutMin) : undefined,
     };
   },
 
@@ -204,12 +220,13 @@ export const MsgMintBySwap = {
     const obj: any = {};
     message.sender !== undefined && (obj.sender = message.sender);
     message.to !== undefined && (obj.to = message.to);
-    message.mintOut !== undefined &&
-      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
+    message.fullBacking !== undefined && (obj.fullBacking = message.fullBacking);
     message.backingInMax !== undefined &&
       (obj.backingInMax = message.backingInMax ? Coin.toJSON(message.backingInMax) : undefined);
     message.lionInMax !== undefined &&
       (obj.lionInMax = message.lionInMax ? Coin.toJSON(message.lionInMax) : undefined);
+    message.mintOutMin !== undefined &&
+      (obj.mintOutMin = message.mintOutMin ? Coin.toJSON(message.mintOutMin) : undefined);
     return obj;
   },
 
@@ -217,8 +234,7 @@ export const MsgMintBySwap = {
     const message = createBaseMsgMintBySwap();
     message.sender = object.sender ?? "";
     message.to = object.to ?? "";
-    message.mintOut =
-      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
+    message.fullBacking = object.fullBacking ?? false;
     message.backingInMax =
       object.backingInMax !== undefined && object.backingInMax !== null
         ? Coin.fromPartial(object.backingInMax)
@@ -227,24 +243,31 @@ export const MsgMintBySwap = {
       object.lionInMax !== undefined && object.lionInMax !== null
         ? Coin.fromPartial(object.lionInMax)
         : undefined;
+    message.mintOutMin =
+      object.mintOutMin !== undefined && object.mintOutMin !== null
+        ? Coin.fromPartial(object.mintOutMin)
+        : undefined;
     return message;
   },
 };
 
 function createBaseMsgMintBySwapResponse(): MsgMintBySwapResponse {
-  return { mintFee: undefined, backingIn: undefined, lionIn: undefined };
+  return { backingIn: undefined, lionIn: undefined, mintOut: undefined, mintFee: undefined };
 }
 
 export const MsgMintBySwapResponse = {
   encode(message: MsgMintBySwapResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.mintFee !== undefined) {
-      Coin.encode(message.mintFee, writer.uint32(10).fork()).ldelim();
-    }
     if (message.backingIn !== undefined) {
-      Coin.encode(message.backingIn, writer.uint32(18).fork()).ldelim();
+      Coin.encode(message.backingIn, writer.uint32(10).fork()).ldelim();
     }
     if (message.lionIn !== undefined) {
-      Coin.encode(message.lionIn, writer.uint32(26).fork()).ldelim();
+      Coin.encode(message.lionIn, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.mintFee !== undefined) {
+      Coin.encode(message.mintFee, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -257,13 +280,16 @@ export const MsgMintBySwapResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.mintFee = Coin.decode(reader, reader.uint32());
-          break;
-        case 2:
           message.backingIn = Coin.decode(reader, reader.uint32());
           break;
-        case 3:
+        case 2:
           message.lionIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.mintOut = Coin.decode(reader, reader.uint32());
+          break;
+        case 4:
+          message.mintFee = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -275,32 +301,37 @@ export const MsgMintBySwapResponse = {
 
   fromJSON(object: any): MsgMintBySwapResponse {
     return {
-      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
       backingIn: isSet(object.backingIn) ? Coin.fromJSON(object.backingIn) : undefined,
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
     };
   },
 
   toJSON(message: MsgMintBySwapResponse): unknown {
     const obj: any = {};
-    message.mintFee !== undefined &&
-      (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
     message.backingIn !== undefined &&
       (obj.backingIn = message.backingIn ? Coin.toJSON(message.backingIn) : undefined);
     message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
+    message.mintOut !== undefined &&
+      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
+    message.mintFee !== undefined &&
+      (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<MsgMintBySwapResponse>, I>>(object: I): MsgMintBySwapResponse {
     const message = createBaseMsgMintBySwapResponse();
-    message.mintFee =
-      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
     message.backingIn =
       object.backingIn !== undefined && object.backingIn !== null
         ? Coin.fromPartial(object.backingIn)
         : undefined;
     message.lionIn =
       object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
+    message.mintOut =
+      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
+    message.mintFee =
+      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
     return message;
   },
 };
