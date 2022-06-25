@@ -8,6 +8,7 @@ export * from "./coins";
 export { default as typeUrls } from "./modules/typeurls";
 export * as eip712 from "./eip712";
 export * from "./tendermintqueries";
+export * as proto from "./proto";
 
 export {
   AminoMsgMintBySwap,
@@ -36,10 +37,13 @@ export {
   OracleExtension,
   VeExtension,
   VestingExtension,
+  TxExtension,
   setupErc20Extension,
   setupGaugeExtension,
   setupMakerExtension,
   setupOracleExtension,
   setupVeExtension,
   setupVestingExtension,
+  setupTxExtension,
+  Events,
 } from "./modules";

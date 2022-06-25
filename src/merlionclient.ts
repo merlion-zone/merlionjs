@@ -44,12 +44,12 @@ import { createDefaultAminoTypes } from "./modules/amino";
 import typeUrls from "./modules/typeurls";
 import { encodeEthSecp256k1Pubkey } from "./amino/encoding";
 import { accountFromAny } from "./account";
-import { setupTxExtension } from "./tx/queries";
 import { encodePubkey } from "./proto-signing/pubkey";
 import { SignDocAmino } from "./eip712";
 import { isOfflineDirectSigner, OfflineSigner } from "./proto-signing/signer";
 import { SequenceManager } from "./sequenceManager";
 import { TxMsgData } from "./proto/cosmos/base/abci/v1beta1/abci";
+import { setupTxExtension } from "./modules";
 
 export interface MerlionClientOptions extends SigningStargateClientOptions {
   readonly eip712Registry?: eip712.Registry;
