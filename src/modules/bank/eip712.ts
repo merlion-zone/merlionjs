@@ -1,5 +1,5 @@
 import * as eip712 from "../../eip712";
-import typeUrls from "../typeurls";
+import { typeUrls } from "../typeurls";
 
 export const bankEIP712Types: ReadonlyArray<[string, eip712.TypedDataTypesMsgValue]> = [
   [

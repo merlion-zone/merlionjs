@@ -12,7 +12,7 @@ import type {
   MsgRedeemCollateral,
   MsgSellBacking,
 } from "../../proto/merlion/maker/v1/tx";
-import typeUrls from "../typeurls";
+import { typeUrls } from "../typeurls";
 
 export interface AminoMsgMintBySwap extends AminoMsg {
   readonly type: "merlion/MsgMintBySwap";

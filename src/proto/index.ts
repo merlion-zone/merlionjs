@@ -1,2 +1,23 @@
+export * as ethsecp256k1Keys from "./ethermint/crypto/v1/ethsecp256k1/keys";
+export * as web3 from "./ethermint/types/v1/web3";
+export * as account from "./ethermint/types/v1/account";
+export * as evm from "./ethermint/evm/v1/evm";
+export * as evmGenesis from "./ethermint/evm/v1/genesis";
+export * as evmTx from "./ethermint/evm/v1/tx";
+export * as evmQuery from "./ethermint/evm/v1/query";
+export * as feemarket from "./ethermint/feemarket/v1/feemarket";
+export * as feemarketGenesis from "./ethermint/feemarket/v1/genesis";
+export * as feemarketQuery from "./ethermint/feemarket/v1/query";
+
+export * as erc20 from "./merlion/erc20/v1/erc20";
+export * as erc20Genesis from "./merlion/erc20/v1/genesis";
+export * as erc20Tx from "./merlion/erc20/v1/tx";
+export * as erc20Query from "./merlion/erc20/v1/query";
+export * as oracle from "./merlion/oracle/v1/oracle";
+export * as oracleGenesis from "./merlion/oracle/v1/genesis";
+export * as oracleTx from "./merlion/oracle/v1/tx";
+export * as oracleQuery from "./merlion/oracle/v1/query";
+export * as maker from "./merlion/maker/v1/maker";
 export * as makerGenesis from "./merlion/maker/v1/genesis";
 export * as makerTx from "./merlion/maker/v1/tx";
+export * as makerQuery from "./merlion/maker/v1/query";

@@ -1,6 +1,6 @@
+import Long from "long";
 import { assert } from "@cosmjs/utils";
 import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import Long from "long";
 import { QueryClientImpl } from "../../proto/merlion/ve/v1/query";
 import type { Params } from "../../proto/merlion/ve/v1/genesis";
 

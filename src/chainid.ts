@@ -1,6 +1,6 @@
 import { Int53 } from "@cosmjs/math";
 
-export default class ChainId {
+export class ChainId {
   public readonly identifier: string;
   public readonly eip155: number;
   public readonly version: number;

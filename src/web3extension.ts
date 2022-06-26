@@ -1,10 +1,10 @@
-import { TypedData } from "./eip712";
-import * as web3 from "./proto/ethermint/types/v1/web3";
 import Long from "long";
 import { ethers } from "ethers";
 import { EncodeObject } from "@cosmjs/proto-signing";
 import { Secp256k1 } from "@cosmjs/crypto";
-import { OfflineSigner } from "./proto-signing/signer";
+import { TypedData } from "./eip712";
+import { OfflineSigner } from "./proto-signing";
+import { web3 } from "./proto";
 
 export interface EIP712Signer {
   readonly getAddress: () => Promise<string>;

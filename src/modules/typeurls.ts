@@ -1,10 +1,4 @@
-import {
-  MsgAggregateExchangeRatePrevote,
-  MsgAggregateExchangeRateVote,
-  MsgDelegateFeedConsent,
-} from "../proto/merlion/oracle/v1/tx";
-
-const typeUrls = {
+export const typeUrls = {
   // bank
   MsgSend: "/cosmos.bank.v1beta1.MsgSend",
   MsgMultiSend: "/cosmos.bank.v1beta1.MsgMultiSend",
@@ -66,6 +60,9 @@ const typeUrls = {
   MsgConnectionOpenConfirm: "/ibc.core.connection.v1.MsgConnectionOpenConfirm",
   MsgConnectionOpenInit: "/ibc.core.connection.v1.MsgConnectionOpenInit",
   MsgConnectionOpenTry: "/ibc.core.connection.v1.MsgConnectionOpenTry",
+  // evm
+  MsgEthereumTx: "/ethermint.evm.v1.MsgEthereumTx",
+  EthereumLegacyTx: "/ethermint.evm.v1.LegacyTx",
+  EthereumAccessListTx: "/ethermint.evm.v1.AccessListTx",
+  EthereumDynamicFeeTx: "/ethermint.evm.v1.DynamicFeeTx",
 } as const;
-
-export default typeUrls;
