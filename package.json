@@ -1,7 +1,7 @@
 {
   "name": "@merlionzone/merlionjs",
   "description": "JavaScript SDK for Merlion, written in TypeScript",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -42,14 +42,14 @@
   },
   "packageManager": "yarn@3.2.1",
   "dependencies": {
-    "@cosmjs/amino": "^0.28.7",
-    "@cosmjs/crypto": "^0.28.7",
-    "@cosmjs/encoding": "^0.28.7",
-    "@cosmjs/math": "^0.28.7",
-    "@cosmjs/proto-signing": "^0.28.7",
-    "@cosmjs/stargate": "^0.28.7",
-    "@cosmjs/tendermint-rpc": "^0.28.7",
-    "@cosmjs/utils": "^0.28.7",
+    "@cosmjs/amino": "^0.28.9",
+    "@cosmjs/crypto": "^0.28.9",
+    "@cosmjs/encoding": "^0.28.9",
+    "@cosmjs/math": "^0.28.9",
+    "@cosmjs/proto-signing": "^0.28.9",
+    "@cosmjs/stargate": "^0.28.9",
+    "@cosmjs/tendermint-rpc": "^0.28.9",
+    "@cosmjs/utils": "^0.28.9",
     "@ethersproject/abstract-provider": "^5.6.1",
     "@ethersproject/abstract-signer": "^5.6.2",
     "@ethersproject/providers": "^5.6.8",
