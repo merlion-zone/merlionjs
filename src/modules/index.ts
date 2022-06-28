@@ -1,5 +1,6 @@
 export * from "./erc20/queries";
 export * from "./gauge/queries";
+export * from "./gov/queries";
 export * from "./maker/aminomessages";
 export * from "./maker/messages";
 export * from "./maker/queries";
