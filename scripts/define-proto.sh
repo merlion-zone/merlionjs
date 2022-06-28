@@ -43,6 +43,12 @@ protoc \
   "$COSMOS_PROTO_DIR/cosmos/tx/signing/v1beta1/signing.proto" \
   "$COSMOS_PROTO_DIR/cosmos/tx/v1beta1/tx.proto" \
   "$COSMOS_PROTO_DIR/cosmos/vesting/v1beta1/vesting.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/msg/v1/msg.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/nft/v1beta1/event.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/nft/v1beta1/genesis.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/nft/v1beta1/nft.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/nft/v1beta1/query.proto" \
+  "$COSMOS_PROTO_DIR/cosmos/nft/v1beta1/tx.proto" \
   "$IBC_PROTO_DIR/ibc/applications/transfer/v1/query.proto" \
   "$IBC_PROTO_DIR/ibc/applications/transfer/v1/tx.proto" \
   "$IBC_PROTO_DIR/ibc/core/channel/v1/channel.proto" \

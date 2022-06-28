@@ -159,6 +159,16 @@ export interface EstimateBuyBackingOutResponse {
   buybackFee?: Coin;
 }
 
+export interface EstimateSellBackingInRequest {
+  lionOut?: Coin;
+  backingDenom: string;
+}
+
+export interface EstimateSellBackingInResponse {
+  backingIn?: Coin;
+  sellbackFee?: Coin;
+}
+
 export interface EstimateSellBackingOutRequest {
   backingIn?: Coin;
 }
@@ -169,18 +179,28 @@ export interface EstimateSellBackingOutResponse {
 }
 
 export interface EstimateMintByCollateralInRequest {
-  sender: string;
-  mintOut?: Coin;
+  account: string;
   collateralDenom: string;
-  lionInMax?: Coin;
+  mintOut?: Coin;
+  ltv: string;
 }
 
 export interface EstimateMintByCollateralInResponse {
+  collateralIn?: Coin;
   lionIn?: Coin;
   mintFee?: Coin;
-  totalColl?: TotalCollateral;
-  poolColl?: PoolCollateral;
-  accColl?: AccountCollateral;
+}
+
+export interface EstimateMintByCollateralOutRequest {
+  account: string;
+  collateralIn?: Coin;
+  ltv: string;
+}
+
+export interface EstimateMintByCollateralOutResponse {
+  lionIn?: Coin;
+  mintOut?: Coin;
+  mintFee?: Coin;
 }
 
 function createBaseQueryAllBackingRiskParamsRequest(): QueryAllBackingRiskParamsRequest {
@@ -2150,6 +2170,136 @@ export const EstimateBuyBackingOutResponse = {
   },
 };
 
+function createBaseEstimateSellBackingInRequest(): EstimateSellBackingInRequest {
+  return { lionOut: undefined, backingDenom: "" };
+}
+
+export const EstimateSellBackingInRequest = {
+  encode(message: EstimateSellBackingInRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.lionOut !== undefined) {
+      Coin.encode(message.lionOut, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.backingDenom !== "") {
+      writer.uint32(18).string(message.backingDenom);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateSellBackingInRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateSellBackingInRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.lionOut = Coin.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.backingDenom = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateSellBackingInRequest {
+    return {
+      lionOut: isSet(object.lionOut) ? Coin.fromJSON(object.lionOut) : undefined,
+      backingDenom: isSet(object.backingDenom) ? String(object.backingDenom) : "",
+    };
+  },
+
+  toJSON(message: EstimateSellBackingInRequest): unknown {
+    const obj: any = {};
+    message.lionOut !== undefined &&
+      (obj.lionOut = message.lionOut ? Coin.toJSON(message.lionOut) : undefined);
+    message.backingDenom !== undefined && (obj.backingDenom = message.backingDenom);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateSellBackingInRequest>, I>>(
+    object: I,
+  ): EstimateSellBackingInRequest {
+    const message = createBaseEstimateSellBackingInRequest();
+    message.lionOut =
+      object.lionOut !== undefined && object.lionOut !== null ? Coin.fromPartial(object.lionOut) : undefined;
+    message.backingDenom = object.backingDenom ?? "";
+    return message;
+  },
+};
+
+function createBaseEstimateSellBackingInResponse(): EstimateSellBackingInResponse {
+  return { backingIn: undefined, sellbackFee: undefined };
+}
+
+export const EstimateSellBackingInResponse = {
+  encode(message: EstimateSellBackingInResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.backingIn !== undefined) {
+      Coin.encode(message.backingIn, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.sellbackFee !== undefined) {
+      Coin.encode(message.sellbackFee, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateSellBackingInResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateSellBackingInResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.backingIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.sellbackFee = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateSellBackingInResponse {
+    return {
+      backingIn: isSet(object.backingIn) ? Coin.fromJSON(object.backingIn) : undefined,
+      sellbackFee: isSet(object.sellbackFee) ? Coin.fromJSON(object.sellbackFee) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateSellBackingInResponse): unknown {
+    const obj: any = {};
+    message.backingIn !== undefined &&
+      (obj.backingIn = message.backingIn ? Coin.toJSON(message.backingIn) : undefined);
+    message.sellbackFee !== undefined &&
+      (obj.sellbackFee = message.sellbackFee ? Coin.toJSON(message.sellbackFee) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateSellBackingInResponse>, I>>(
+    object: I,
+  ): EstimateSellBackingInResponse {
+    const message = createBaseEstimateSellBackingInResponse();
+    message.backingIn =
+      object.backingIn !== undefined && object.backingIn !== null
+        ? Coin.fromPartial(object.backingIn)
+        : undefined;
+    message.sellbackFee =
+      object.sellbackFee !== undefined && object.sellbackFee !== null
+        ? Coin.fromPartial(object.sellbackFee)
+        : undefined;
+    return message;
+  },
+};
+
 function createBaseEstimateSellBackingOutRequest(): EstimateSellBackingOutRequest {
   return { backingIn: undefined };
 }
@@ -2272,22 +2422,22 @@ export const EstimateSellBackingOutResponse = {
 };
 
 function createBaseEstimateMintByCollateralInRequest(): EstimateMintByCollateralInRequest {
-  return { sender: "", mintOut: undefined, collateralDenom: "", lionInMax: undefined };
+  return { account: "", collateralDenom: "", mintOut: undefined, ltv: "" };
 }
 
 export const EstimateMintByCollateralInRequest = {
   encode(message: EstimateMintByCollateralInRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender !== "") {
-      writer.uint32(10).string(message.sender);
-    }
-    if (message.mintOut !== undefined) {
-      Coin.encode(message.mintOut, writer.uint32(18).fork()).ldelim();
+    if (message.account !== "") {
+      writer.uint32(10).string(message.account);
     }
     if (message.collateralDenom !== "") {
-      writer.uint32(26).string(message.collateralDenom);
+      writer.uint32(18).string(message.collateralDenom);
     }
-    if (message.lionInMax !== undefined) {
-      Coin.encode(message.lionInMax, writer.uint32(34).fork()).ldelim();
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.ltv !== "") {
+      writer.uint32(34).string(message.ltv);
     }
     return writer;
   },
@@ -2300,16 +2450,16 @@ export const EstimateMintByCollateralInRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.sender = reader.string();
+          message.account = reader.string();
           break;
         case 2:
-          message.mintOut = Coin.decode(reader, reader.uint32());
-          break;
-        case 3:
           message.collateralDenom = reader.string();
           break;
+        case 3:
+          message.mintOut = Coin.decode(reader, reader.uint32());
+          break;
         case 4:
-          message.lionInMax = Coin.decode(reader, reader.uint32());
+          message.ltv = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2321,21 +2471,20 @@ export const EstimateMintByCollateralInRequest = {
 
   fromJSON(object: any): EstimateMintByCollateralInRequest {
     return {
-      sender: isSet(object.sender) ? String(object.sender) : "",
-      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      account: isSet(object.account) ? String(object.account) : "",
       collateralDenom: isSet(object.collateralDenom) ? String(object.collateralDenom) : "",
-      lionInMax: isSet(object.lionInMax) ? Coin.fromJSON(object.lionInMax) : undefined,
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      ltv: isSet(object.ltv) ? String(object.ltv) : "",
     };
   },
 
   toJSON(message: EstimateMintByCollateralInRequest): unknown {
     const obj: any = {};
-    message.sender !== undefined && (obj.sender = message.sender);
+    message.account !== undefined && (obj.account = message.account);
+    message.collateralDenom !== undefined && (obj.collateralDenom = message.collateralDenom);
     message.mintOut !== undefined &&
       (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
-    message.collateralDenom !== undefined && (obj.collateralDenom = message.collateralDenom);
-    message.lionInMax !== undefined &&
-      (obj.lionInMax = message.lionInMax ? Coin.toJSON(message.lionInMax) : undefined);
+    message.ltv !== undefined && (obj.ltv = message.ltv);
     return obj;
   },
 
@@ -2343,44 +2492,29 @@ export const EstimateMintByCollateralInRequest = {
     object: I,
   ): EstimateMintByCollateralInRequest {
     const message = createBaseEstimateMintByCollateralInRequest();
-    message.sender = object.sender ?? "";
+    message.account = object.account ?? "";
+    message.collateralDenom = object.collateralDenom ?? "";
     message.mintOut =
       object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
-    message.collateralDenom = object.collateralDenom ?? "";
-    message.lionInMax =
-      object.lionInMax !== undefined && object.lionInMax !== null
-        ? Coin.fromPartial(object.lionInMax)
-        : undefined;
+    message.ltv = object.ltv ?? "";
     return message;
   },
 };
 
 function createBaseEstimateMintByCollateralInResponse(): EstimateMintByCollateralInResponse {
-  return {
-    lionIn: undefined,
-    mintFee: undefined,
-    totalColl: undefined,
-    poolColl: undefined,
-    accColl: undefined,
-  };
+  return { collateralIn: undefined, lionIn: undefined, mintFee: undefined };
 }
 
 export const EstimateMintByCollateralInResponse = {
   encode(message: EstimateMintByCollateralInResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.collateralIn !== undefined) {
+      Coin.encode(message.collateralIn, writer.uint32(10).fork()).ldelim();
+    }
     if (message.lionIn !== undefined) {
-      Coin.encode(message.lionIn, writer.uint32(10).fork()).ldelim();
+      Coin.encode(message.lionIn, writer.uint32(18).fork()).ldelim();
     }
     if (message.mintFee !== undefined) {
-      Coin.encode(message.mintFee, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.totalColl !== undefined) {
-      TotalCollateral.encode(message.totalColl, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.poolColl !== undefined) {
-      PoolCollateral.encode(message.poolColl, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.accColl !== undefined) {
-      AccountCollateral.encode(message.accColl, writer.uint32(42).fork()).ldelim();
+      Coin.encode(message.mintFee, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -2393,19 +2527,13 @@ export const EstimateMintByCollateralInResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.lionIn = Coin.decode(reader, reader.uint32());
+          message.collateralIn = Coin.decode(reader, reader.uint32());
           break;
         case 2:
-          message.mintFee = Coin.decode(reader, reader.uint32());
+          message.lionIn = Coin.decode(reader, reader.uint32());
           break;
         case 3:
-          message.totalColl = TotalCollateral.decode(reader, reader.uint32());
-          break;
-        case 4:
-          message.poolColl = PoolCollateral.decode(reader, reader.uint32());
-          break;
-        case 5:
-          message.accColl = AccountCollateral.decode(reader, reader.uint32());
+          message.mintFee = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2417,25 +2545,19 @@ export const EstimateMintByCollateralInResponse = {
 
   fromJSON(object: any): EstimateMintByCollateralInResponse {
     return {
+      collateralIn: isSet(object.collateralIn) ? Coin.fromJSON(object.collateralIn) : undefined,
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
       mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
-      totalColl: isSet(object.totalColl) ? TotalCollateral.fromJSON(object.totalColl) : undefined,
-      poolColl: isSet(object.poolColl) ? PoolCollateral.fromJSON(object.poolColl) : undefined,
-      accColl: isSet(object.accColl) ? AccountCollateral.fromJSON(object.accColl) : undefined,
     };
   },
 
   toJSON(message: EstimateMintByCollateralInResponse): unknown {
     const obj: any = {};
+    message.collateralIn !== undefined &&
+      (obj.collateralIn = message.collateralIn ? Coin.toJSON(message.collateralIn) : undefined);
     message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
     message.mintFee !== undefined &&
       (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
-    message.totalColl !== undefined &&
-      (obj.totalColl = message.totalColl ? TotalCollateral.toJSON(message.totalColl) : undefined);
-    message.poolColl !== undefined &&
-      (obj.poolColl = message.poolColl ? PoolCollateral.toJSON(message.poolColl) : undefined);
-    message.accColl !== undefined &&
-      (obj.accColl = message.accColl ? AccountCollateral.toJSON(message.accColl) : undefined);
     return obj;
   },
 
@@ -2443,22 +2565,161 @@ export const EstimateMintByCollateralInResponse = {
     object: I,
   ): EstimateMintByCollateralInResponse {
     const message = createBaseEstimateMintByCollateralInResponse();
+    message.collateralIn =
+      object.collateralIn !== undefined && object.collateralIn !== null
+        ? Coin.fromPartial(object.collateralIn)
+        : undefined;
     message.lionIn =
       object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
     message.mintFee =
       object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
-    message.totalColl =
-      object.totalColl !== undefined && object.totalColl !== null
-        ? TotalCollateral.fromPartial(object.totalColl)
+    return message;
+  },
+};
+
+function createBaseEstimateMintByCollateralOutRequest(): EstimateMintByCollateralOutRequest {
+  return { account: "", collateralIn: undefined, ltv: "" };
+}
+
+export const EstimateMintByCollateralOutRequest = {
+  encode(message: EstimateMintByCollateralOutRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.account !== "") {
+      writer.uint32(10).string(message.account);
+    }
+    if (message.collateralIn !== undefined) {
+      Coin.encode(message.collateralIn, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.ltv !== "") {
+      writer.uint32(26).string(message.ltv);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintByCollateralOutRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateMintByCollateralOutRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.account = reader.string();
+          break;
+        case 2:
+          message.collateralIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.ltv = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateMintByCollateralOutRequest {
+    return {
+      account: isSet(object.account) ? String(object.account) : "",
+      collateralIn: isSet(object.collateralIn) ? Coin.fromJSON(object.collateralIn) : undefined,
+      ltv: isSet(object.ltv) ? String(object.ltv) : "",
+    };
+  },
+
+  toJSON(message: EstimateMintByCollateralOutRequest): unknown {
+    const obj: any = {};
+    message.account !== undefined && (obj.account = message.account);
+    message.collateralIn !== undefined &&
+      (obj.collateralIn = message.collateralIn ? Coin.toJSON(message.collateralIn) : undefined);
+    message.ltv !== undefined && (obj.ltv = message.ltv);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateMintByCollateralOutRequest>, I>>(
+    object: I,
+  ): EstimateMintByCollateralOutRequest {
+    const message = createBaseEstimateMintByCollateralOutRequest();
+    message.account = object.account ?? "";
+    message.collateralIn =
+      object.collateralIn !== undefined && object.collateralIn !== null
+        ? Coin.fromPartial(object.collateralIn)
         : undefined;
-    message.poolColl =
-      object.poolColl !== undefined && object.poolColl !== null
-        ? PoolCollateral.fromPartial(object.poolColl)
-        : undefined;
-    message.accColl =
-      object.accColl !== undefined && object.accColl !== null
-        ? AccountCollateral.fromPartial(object.accColl)
-        : undefined;
+    message.ltv = object.ltv ?? "";
+    return message;
+  },
+};
+
+function createBaseEstimateMintByCollateralOutResponse(): EstimateMintByCollateralOutResponse {
+  return { lionIn: undefined, mintOut: undefined, mintFee: undefined };
+}
+
+export const EstimateMintByCollateralOutResponse = {
+  encode(message: EstimateMintByCollateralOutResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.lionIn !== undefined) {
+      Coin.encode(message.lionIn, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.mintFee !== undefined) {
+      Coin.encode(message.mintFee, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EstimateMintByCollateralOutResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEstimateMintByCollateralOutResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.lionIn = Coin.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.mintOut = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.mintFee = Coin.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EstimateMintByCollateralOutResponse {
+    return {
+      lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
+    };
+  },
+
+  toJSON(message: EstimateMintByCollateralOutResponse): unknown {
+    const obj: any = {};
+    message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
+    message.mintOut !== undefined &&
+      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
+    message.mintFee !== undefined &&
+      (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EstimateMintByCollateralOutResponse>, I>>(
+    object: I,
+  ): EstimateMintByCollateralOutResponse {
+    const message = createBaseEstimateMintByCollateralOutResponse();
+    message.lionIn =
+      object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
+    message.mintOut =
+      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
+    message.mintFee =
+      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
     return message;
   },
 };
@@ -2501,12 +2762,18 @@ export interface Query {
   EstimateBuyBackingIn(request: EstimateBuyBackingInRequest): Promise<EstimateBuyBackingInResponse>;
   /** EstimateBuyBackingOut estimates output of buying backing assets. */
   EstimateBuyBackingOut(request: EstimateBuyBackingOutRequest): Promise<EstimateBuyBackingOutResponse>;
+  /** EstimateSellBackingIn estimates input of selling backing assets. */
+  EstimateSellBackingIn(request: EstimateSellBackingInRequest): Promise<EstimateSellBackingInResponse>;
   /** EstimateSellBackingOut estimates output of selling backing assets. */
   EstimateSellBackingOut(request: EstimateSellBackingOutRequest): Promise<EstimateSellBackingOutResponse>;
   /** EstimateMintByCollateralIn estimates input of minting by collateral. */
   EstimateMintByCollateralIn(
     request: EstimateMintByCollateralInRequest,
   ): Promise<EstimateMintByCollateralInResponse>;
+  /** EstimateMintByCollateralOut estimates output of minting by collateral. */
+  EstimateMintByCollateralOut(
+    request: EstimateMintByCollateralOutRequest,
+  ): Promise<EstimateMintByCollateralOutResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -2530,8 +2797,10 @@ export class QueryClientImpl implements Query {
     this.EstimateBurnBySwapOut = this.EstimateBurnBySwapOut.bind(this);
     this.EstimateBuyBackingIn = this.EstimateBuyBackingIn.bind(this);
     this.EstimateBuyBackingOut = this.EstimateBuyBackingOut.bind(this);
+    this.EstimateSellBackingIn = this.EstimateSellBackingIn.bind(this);
     this.EstimateSellBackingOut = this.EstimateSellBackingOut.bind(this);
     this.EstimateMintByCollateralIn = this.EstimateMintByCollateralIn.bind(this);
+    this.EstimateMintByCollateralOut = this.EstimateMintByCollateralOut.bind(this);
   }
   AllBackingRiskParams(
     request: QueryAllBackingRiskParamsRequest,
@@ -2639,6 +2908,12 @@ export class QueryClientImpl implements Query {
     return promise.then((data) => EstimateBuyBackingOutResponse.decode(new _m0.Reader(data)));
   }
 
+  EstimateSellBackingIn(request: EstimateSellBackingInRequest): Promise<EstimateSellBackingInResponse> {
+    const data = EstimateSellBackingInRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateSellBackingIn", data);
+    return promise.then((data) => EstimateSellBackingInResponse.decode(new _m0.Reader(data)));
+  }
+
   EstimateSellBackingOut(request: EstimateSellBackingOutRequest): Promise<EstimateSellBackingOutResponse> {
     const data = EstimateSellBackingOutRequest.encode(request).finish();
     const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateSellBackingOut", data);
@@ -2651,6 +2926,14 @@ export class QueryClientImpl implements Query {
     const data = EstimateMintByCollateralInRequest.encode(request).finish();
     const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateMintByCollateralIn", data);
     return promise.then((data) => EstimateMintByCollateralInResponse.decode(new _m0.Reader(data)));
+  }
+
+  EstimateMintByCollateralOut(
+    request: EstimateMintByCollateralOutRequest,
+  ): Promise<EstimateMintByCollateralOutResponse> {
+    const data = EstimateMintByCollateralOutRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.maker.v1.Query", "EstimateMintByCollateralOut", data);
+    return promise.then((data) => EstimateMintByCollateralOutResponse.decode(new _m0.Reader(data)));
   }
 }
 

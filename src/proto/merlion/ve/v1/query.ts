@@ -1,6 +1,8 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
+import { NFT } from "../../../cosmos/nft/v1beta1/nft";
 import { Params } from "../../../merlion/ve/v1/genesis";
 
 export const protobufPackage = "merlion.ve.v1";
@@ -22,6 +24,28 @@ export interface QueryVotingPowerRequest {
 
 export interface QueryVotingPowerResponse {
   power: string;
+}
+
+/** QueryVeNftsRequest is the request type for the Query/VeNfts RPC method */
+export interface QueryVeNftsRequest {
+  owner: string;
+  pagination?: PageRequest;
+}
+
+/** QueryVeNftsResponse is the response type for the Query/VeNfts RPC methods */
+export interface QueryVeNftsResponse {
+  nfts: NFT[];
+  pagination?: PageResponse;
+}
+
+/** QueryVeNftRequest is the request type for the Query/VeNft RPC method */
+export interface QueryVeNftRequest {
+  id: string;
+}
+
+/** QueryVeNftResponse is the response type for the Query/VeNft RPC method */
+export interface QueryVeNftResponse {
+  nft?: NFT;
 }
 
 /** QueryParamsRequest is request type for the Query/Params RPC method. */
@@ -266,6 +290,232 @@ export const QueryVotingPowerResponse = {
   },
 };
 
+function createBaseQueryVeNftsRequest(): QueryVeNftsRequest {
+  return { owner: "", pagination: undefined };
+}
+
+export const QueryVeNftsRequest = {
+  encode(message: QueryVeNftsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.owner !== "") {
+      writer.uint32(10).string(message.owner);
+    }
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryVeNftsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryVeNftsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.owner = reader.string();
+          break;
+        case 2:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryVeNftsRequest {
+    return {
+      owner: isSet(object.owner) ? String(object.owner) : "",
+      pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryVeNftsRequest): unknown {
+    const obj: any = {};
+    message.owner !== undefined && (obj.owner = message.owner);
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryVeNftsRequest>, I>>(object: I): QueryVeNftsRequest {
+    const message = createBaseQueryVeNftsRequest();
+    message.owner = object.owner ?? "";
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageRequest.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryVeNftsResponse(): QueryVeNftsResponse {
+  return { nfts: [], pagination: undefined };
+}
+
+export const QueryVeNftsResponse = {
+  encode(message: QueryVeNftsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.nfts) {
+      NFT.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryVeNftsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryVeNftsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.nfts.push(NFT.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryVeNftsResponse {
+    return {
+      nfts: Array.isArray(object?.nfts) ? object.nfts.map((e: any) => NFT.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryVeNftsResponse): unknown {
+    const obj: any = {};
+    if (message.nfts) {
+      obj.nfts = message.nfts.map((e) => (e ? NFT.toJSON(e) : undefined));
+    } else {
+      obj.nfts = [];
+    }
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryVeNftsResponse>, I>>(object: I): QueryVeNftsResponse {
+    const message = createBaseQueryVeNftsResponse();
+    message.nfts = object.nfts?.map((e) => NFT.fromPartial(e)) || [];
+    message.pagination =
+      object.pagination !== undefined && object.pagination !== null
+        ? PageResponse.fromPartial(object.pagination)
+        : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryVeNftRequest(): QueryVeNftRequest {
+  return { id: "" };
+}
+
+export const QueryVeNftRequest = {
+  encode(message: QueryVeNftRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryVeNftRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryVeNftRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryVeNftRequest {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+    };
+  },
+
+  toJSON(message: QueryVeNftRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryVeNftRequest>, I>>(object: I): QueryVeNftRequest {
+    const message = createBaseQueryVeNftRequest();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryVeNftResponse(): QueryVeNftResponse {
+  return { nft: undefined };
+}
+
+export const QueryVeNftResponse = {
+  encode(message: QueryVeNftResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.nft !== undefined) {
+      NFT.encode(message.nft, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryVeNftResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryVeNftResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.nft = NFT.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryVeNftResponse {
+    return {
+      nft: isSet(object.nft) ? NFT.fromJSON(object.nft) : undefined,
+    };
+  },
+
+  toJSON(message: QueryVeNftResponse): unknown {
+    const obj: any = {};
+    message.nft !== undefined && (obj.nft = message.nft ? NFT.toJSON(message.nft) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryVeNftResponse>, I>>(object: I): QueryVeNftResponse {
+    const message = createBaseQueryVeNftResponse();
+    message.nft = object.nft !== undefined && object.nft !== null ? NFT.fromPartial(object.nft) : undefined;
+    return message;
+  },
+};
+
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -361,6 +611,10 @@ export interface Query {
   TotalVotingPower(request: QueryTotalVotingPowerRequest): Promise<QueryTotalVotingPowerResponse>;
   /** VotingPower queries the voting power of a veNFT. */
   VotingPower(request: QueryVotingPowerRequest): Promise<QueryVotingPowerResponse>;
+  /** VeNfts queries all veNFTs of a given owner. */
+  VeNfts(request: QueryVeNftsRequest): Promise<QueryVeNftsResponse>;
+  /** VeNft queries an veNFT based on its id. */
+  VeNft(request: QueryVeNftRequest): Promise<QueryVeNftResponse>;
   /** Parameters queries the parameters of the module. */
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse>;
 }
@@ -371,6 +625,8 @@ export class QueryClientImpl implements Query {
     this.rpc = rpc;
     this.TotalVotingPower = this.TotalVotingPower.bind(this);
     this.VotingPower = this.VotingPower.bind(this);
+    this.VeNfts = this.VeNfts.bind(this);
+    this.VeNft = this.VeNft.bind(this);
     this.Params = this.Params.bind(this);
   }
   TotalVotingPower(request: QueryTotalVotingPowerRequest): Promise<QueryTotalVotingPowerResponse> {
@@ -383,6 +639,18 @@ export class QueryClientImpl implements Query {
     const data = QueryVotingPowerRequest.encode(request).finish();
     const promise = this.rpc.request("merlion.ve.v1.Query", "VotingPower", data);
     return promise.then((data) => QueryVotingPowerResponse.decode(new _m0.Reader(data)));
+  }
+
+  VeNfts(request: QueryVeNftsRequest): Promise<QueryVeNftsResponse> {
+    const data = QueryVeNftsRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.ve.v1.Query", "VeNfts", data);
+    return promise.then((data) => QueryVeNftsResponse.decode(new _m0.Reader(data)));
+  }
+
+  VeNft(request: QueryVeNftRequest): Promise<QueryVeNftResponse> {
+    const data = QueryVeNftRequest.encode(request).finish();
+    const promise = this.rpc.request("merlion.ve.v1.Query", "VeNft", data);
+    return promise.then((data) => QueryVeNftResponse.decode(new _m0.Reader(data)));
   }
 
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {

@@ -19,9 +19,10 @@ export interface AminoMsgMintBySwap extends AminoMsg {
   readonly value: {
     readonly sender: string;
     readonly to: string;
-    readonly mint_out: Coin;
+    readonly full_backing: boolean;
     readonly backing_in_max: Coin;
     readonly lion_in_max: Coin;
+    readonly mint_out_min: Coin;
   };
 }
 
@@ -144,17 +145,28 @@ export function createMakerAminoConverters(): AminoConverters {
   return {
     [typeUrls.MsgMintBySwap]: {
       aminoType: "merlion/MsgMintBySwap",
-      toAmino: ({ sender, to, backingInMax, lionInMax }: MsgMintBySwap) => ({
+      toAmino: ({ sender, to, fullBacking, backingInMax, lionInMax, mintOutMin }: MsgMintBySwap) => ({
         sender,
         to,
+        full_backing: fullBacking,
         backing_in_max: backingInMax,
         lion_in_max: lionInMax,
+        mint_out_min: mintOutMin,
       }),
-      fromAmino: ({ sender, to, backing_in_max, lion_in_max }: AminoMsgMintBySwap["value"]) => ({
+      fromAmino: ({
         sender,
         to,
+        full_backing,
+        backing_in_max,
+        lion_in_max,
+        mint_out_min,
+      }: AminoMsgMintBySwap["value"]) => ({
+        sender,
+        to,
+        fullBacking: full_backing,
         backingInMax: backing_in_max,
         lionInMax: lion_in_max,
+        mintOutMin: mint_out_min,
       }),
     },
     [typeUrls.MsgBurnBySwap]: {
@@ -206,12 +218,12 @@ export function createMakerAminoConverters(): AminoConverters {
     },
     [typeUrls.MsgMintByCollateral]: {
       aminoType: "merlion/MsgMintByCollateral",
-      toAmino: ({ sender, to, collateralDenom, mintOut, lionInMax }: MsgMintByCollateral) => ({
+      toAmino: ({ sender, to, collateralDenom, ltv, mintOutMin }: MsgMintByCollateral) => ({
         sender,
         to,
         collateral_denom: collateralDenom,
-        mint_out: mintOut,
-        lion_in_max: lionInMax,
+        ltv,
+        mint_out_min: mintOutMin,
       }),
       fromAmino: ({
         sender,

@@ -76,14 +76,15 @@ export interface MsgMintByCollateral {
   sender: string;
   to: string;
   collateralDenom: string;
-  mintOut?: Coin;
-  lionInMax?: Coin;
+  ltv: string;
+  mintOutMin?: Coin;
 }
 
 /** MsgMintByCollateralResponse defines the Msg/MintByCollateral response type. */
 export interface MsgMintByCollateralResponse {
-  mintFee?: Coin;
   lionIn?: Coin;
+  mintOut?: Coin;
+  mintFee?: Coin;
 }
 
 /**
@@ -775,7 +776,7 @@ export const MsgSellBackingResponse = {
 };
 
 function createBaseMsgMintByCollateral(): MsgMintByCollateral {
-  return { sender: "", to: "", collateralDenom: "", mintOut: undefined, lionInMax: undefined };
+  return { sender: "", to: "", collateralDenom: "", ltv: "", mintOutMin: undefined };
 }
 
 export const MsgMintByCollateral = {
@@ -789,11 +790,11 @@ export const MsgMintByCollateral = {
     if (message.collateralDenom !== "") {
       writer.uint32(26).string(message.collateralDenom);
     }
-    if (message.mintOut !== undefined) {
-      Coin.encode(message.mintOut, writer.uint32(34).fork()).ldelim();
+    if (message.ltv !== "") {
+      writer.uint32(34).string(message.ltv);
     }
-    if (message.lionInMax !== undefined) {
-      Coin.encode(message.lionInMax, writer.uint32(42).fork()).ldelim();
+    if (message.mintOutMin !== undefined) {
+      Coin.encode(message.mintOutMin, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -815,10 +816,10 @@ export const MsgMintByCollateral = {
           message.collateralDenom = reader.string();
           break;
         case 4:
-          message.mintOut = Coin.decode(reader, reader.uint32());
+          message.ltv = reader.string();
           break;
         case 5:
-          message.lionInMax = Coin.decode(reader, reader.uint32());
+          message.mintOutMin = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -833,8 +834,8 @@ export const MsgMintByCollateral = {
       sender: isSet(object.sender) ? String(object.sender) : "",
       to: isSet(object.to) ? String(object.to) : "",
       collateralDenom: isSet(object.collateralDenom) ? String(object.collateralDenom) : "",
-      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
-      lionInMax: isSet(object.lionInMax) ? Coin.fromJSON(object.lionInMax) : undefined,
+      ltv: isSet(object.ltv) ? String(object.ltv) : "",
+      mintOutMin: isSet(object.mintOutMin) ? Coin.fromJSON(object.mintOutMin) : undefined,
     };
   },
 
@@ -843,10 +844,9 @@ export const MsgMintByCollateral = {
     message.sender !== undefined && (obj.sender = message.sender);
     message.to !== undefined && (obj.to = message.to);
     message.collateralDenom !== undefined && (obj.collateralDenom = message.collateralDenom);
-    message.mintOut !== undefined &&
-      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
-    message.lionInMax !== undefined &&
-      (obj.lionInMax = message.lionInMax ? Coin.toJSON(message.lionInMax) : undefined);
+    message.ltv !== undefined && (obj.ltv = message.ltv);
+    message.mintOutMin !== undefined &&
+      (obj.mintOutMin = message.mintOutMin ? Coin.toJSON(message.mintOutMin) : undefined);
     return obj;
   },
 
@@ -855,27 +855,29 @@ export const MsgMintByCollateral = {
     message.sender = object.sender ?? "";
     message.to = object.to ?? "";
     message.collateralDenom = object.collateralDenom ?? "";
-    message.mintOut =
-      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
-    message.lionInMax =
-      object.lionInMax !== undefined && object.lionInMax !== null
-        ? Coin.fromPartial(object.lionInMax)
+    message.ltv = object.ltv ?? "";
+    message.mintOutMin =
+      object.mintOutMin !== undefined && object.mintOutMin !== null
+        ? Coin.fromPartial(object.mintOutMin)
         : undefined;
     return message;
   },
 };
 
 function createBaseMsgMintByCollateralResponse(): MsgMintByCollateralResponse {
-  return { mintFee: undefined, lionIn: undefined };
+  return { lionIn: undefined, mintOut: undefined, mintFee: undefined };
 }
 
 export const MsgMintByCollateralResponse = {
   encode(message: MsgMintByCollateralResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.mintFee !== undefined) {
-      Coin.encode(message.mintFee, writer.uint32(10).fork()).ldelim();
-    }
     if (message.lionIn !== undefined) {
-      Coin.encode(message.lionIn, writer.uint32(18).fork()).ldelim();
+      Coin.encode(message.lionIn, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.mintOut !== undefined) {
+      Coin.encode(message.mintOut, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.mintFee !== undefined) {
+      Coin.encode(message.mintFee, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -888,10 +890,13 @@ export const MsgMintByCollateralResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.mintFee = Coin.decode(reader, reader.uint32());
+          message.lionIn = Coin.decode(reader, reader.uint32());
           break;
         case 2:
-          message.lionIn = Coin.decode(reader, reader.uint32());
+          message.mintOut = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.mintFee = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -903,16 +908,19 @@ export const MsgMintByCollateralResponse = {
 
   fromJSON(object: any): MsgMintByCollateralResponse {
     return {
-      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
       lionIn: isSet(object.lionIn) ? Coin.fromJSON(object.lionIn) : undefined,
+      mintOut: isSet(object.mintOut) ? Coin.fromJSON(object.mintOut) : undefined,
+      mintFee: isSet(object.mintFee) ? Coin.fromJSON(object.mintFee) : undefined,
     };
   },
 
   toJSON(message: MsgMintByCollateralResponse): unknown {
     const obj: any = {};
+    message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
+    message.mintOut !== undefined &&
+      (obj.mintOut = message.mintOut ? Coin.toJSON(message.mintOut) : undefined);
     message.mintFee !== undefined &&
       (obj.mintFee = message.mintFee ? Coin.toJSON(message.mintFee) : undefined);
-    message.lionIn !== undefined && (obj.lionIn = message.lionIn ? Coin.toJSON(message.lionIn) : undefined);
     return obj;
   },
 
@@ -920,10 +928,12 @@ export const MsgMintByCollateralResponse = {
     object: I,
   ): MsgMintByCollateralResponse {
     const message = createBaseMsgMintByCollateralResponse();
-    message.mintFee =
-      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
     message.lionIn =
       object.lionIn !== undefined && object.lionIn !== null ? Coin.fromPartial(object.lionIn) : undefined;
+    message.mintOut =
+      object.mintOut !== undefined && object.mintOut !== null ? Coin.fromPartial(object.mintOut) : undefined;
+    message.mintFee =
+      object.mintFee !== undefined && object.mintFee !== null ? Coin.fromPartial(object.mintFee) : undefined;
     return message;
   },
 };

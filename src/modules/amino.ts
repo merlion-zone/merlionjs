@@ -10,6 +10,7 @@ import {
   createStakingAminoConverters,
 } from "@cosmjs/stargate";
 import { createVestingAminoConverters } from "@cosmjs/stargate/build/modules";
+import { createMakerAminoConverters } from "./maker/aminomessages";
 
 export function createDefaultAminoTypes(prefix: string): AminoTypes {
   const converters: AminoConverters = {
@@ -21,6 +22,7 @@ export function createDefaultAminoTypes(prefix: string): AminoTypes {
     ...createIbcAminoConverters(),
     ...createFreegrantAminoConverters(),
     ...createVestingAminoConverters(),
+    ...createMakerAminoConverters(),
   };
   return new AminoTypes(converters);
 }
