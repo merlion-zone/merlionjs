@@ -15,7 +15,7 @@ import {
 } from "cosmjs-types/cosmos/gov/v1beta1/query";
 import Long from "long";
 
-import { longify } from "../../queryclient/utils";
+import { longify, Pagination } from "../../queryclient/utils";
 
 export type GovParamsType = "deposit" | "tallying" | "voting";
 
@@ -28,16 +28,19 @@ export interface GovExtension {
       proposalStatus: ProposalStatus,
       depositor: string,
       voter: string,
-      pagination?: Partial<PageRequest>,
+      pagination?: Pagination,
     ) => Promise<QueryProposalsResponse>;
     readonly proposal: (proposalId: GovProposalId) => Promise<QueryProposalResponse>;
     readonly deposits: (
       proposalId: GovProposalId,
-      pagination?: Partial<PageRequest>,
+      pagination?: Pagination,
     ) => Promise<QueryDepositsResponse>;
     readonly deposit: (proposalId: GovProposalId, depositorAddress: string) => Promise<QueryDepositResponse>;
     readonly tally: (proposalId: GovProposalId) => Promise<QueryTallyResultResponse>;
-    readonly votes: (proposalId: GovProposalId, pagination?: Partial<PageRequest>) => Promise<QueryVotesResponse>;
+    readonly votes: (
+      proposalId: GovProposalId,
+      pagination?: Pagination,
+    ) => Promise<QueryVotesResponse>;
     readonly vote: (proposalId: GovProposalId, voterAddress: string) => Promise<QueryVoteResponse>;
   };
 }
@@ -59,7 +62,7 @@ export function setupGovExtension(base: QueryClient): GovExtension {
         proposalStatus: ProposalStatus,
         depositorAddress: string,
         voterAddress: string,
-        pagination?: Partial<PageRequest>,
+        pagination?: Pagination,
       ) => {
         const response = await queryService.Proposals({
           proposalStatus,
@@ -73,7 +76,7 @@ export function setupGovExtension(base: QueryClient): GovExtension {
         const response = await queryService.Proposal({ proposalId: longify(proposalId) });
         return response;
       },
-      deposits: async (proposalId: GovProposalId, pagination?: Partial<PageRequest>) => {
+      deposits: async (proposalId: GovProposalId, pagination?: Pagination) => {
         const response = await queryService.Deposits({
           proposalId: longify(proposalId),
           pagination: pagination && PageRequest.fromPartial(pagination),
@@ -93,7 +96,7 @@ export function setupGovExtension(base: QueryClient): GovExtension {
         });
         return response;
       },
-      votes: async (proposalId: GovProposalId, pagination?: Partial<PageRequest>) => {
+      votes: async (proposalId: GovProposalId, pagination?: Pagination) => {
         const response = await queryService.Votes({
           proposalId: longify(proposalId),
           pagination: pagination && PageRequest.fromPartial(pagination),
