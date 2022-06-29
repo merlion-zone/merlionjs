@@ -12,9 +12,9 @@ export const govEIP712Types: ReadonlyArray<[string, eip712.TypedDataTypesMsgValu
       ],
       TypeContent: [
         { name: "type", type: "string" },
-        { name: "value", type: "TypeValue" },
+        { name: "value", type: "TypeContentValue" },
       ],
-      TypeValue: [
+      TypeContentValue: [
         { name: "title", type: "string" },
         { name: "description", type: "string" },
       ],

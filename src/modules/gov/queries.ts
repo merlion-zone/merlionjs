@@ -31,16 +31,10 @@ export interface GovExtension {
       pagination?: Pagination,
     ) => Promise<QueryProposalsResponse>;
     readonly proposal: (proposalId: GovProposalId) => Promise<QueryProposalResponse>;
-    readonly deposits: (
-      proposalId: GovProposalId,
-      pagination?: Pagination,
-    ) => Promise<QueryDepositsResponse>;
+    readonly deposits: (proposalId: GovProposalId, pagination?: Pagination) => Promise<QueryDepositsResponse>;
     readonly deposit: (proposalId: GovProposalId, depositorAddress: string) => Promise<QueryDepositResponse>;
     readonly tally: (proposalId: GovProposalId) => Promise<QueryTallyResultResponse>;
-    readonly votes: (
-      proposalId: GovProposalId,
-      pagination?: Pagination,
-    ) => Promise<QueryVotesResponse>;
+    readonly votes: (proposalId: GovProposalId, pagination?: Pagination) => Promise<QueryVotesResponse>;
     readonly vote: (proposalId: GovProposalId, voterAddress: string) => Promise<QueryVoteResponse>;
   };
 }
