@@ -24,4 +24,26 @@ export const govEIP712Types: ReadonlyArray<[string, eip712.TypedDataTypesMsgValu
       ],
     },
   ],
+  [
+    typeUrls.MsgVote, {
+      MsgValue: [
+        { name: "proposal_id", type: "uint64" },
+        { name: "voter", type: "string" },
+        { name: "option", type: "int32" },
+      ],
+    }
+  ],
+  [
+    typeUrls.MsgDeposit, {
+      MsgValue: [
+        { name: "proposal_id", type: "uint64" },
+        { name: "depositor", type: "string" },
+        { name: "amount", type: "TypeAmount[]" },
+      ],
+      TypeAmount: [
+        { name: "denom" , type: "string"},
+        { name: "amount", type: "string" },
+      ]
+    }
+  ],
 ];
