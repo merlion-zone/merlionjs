@@ -152,6 +152,8 @@ export interface BatchSetCollateralRiskParamsProposal {
 }
 
 export interface TotalBacking {
+  /** total backing value in USD */
+  backingValue: string;
   /** total minted mer */
   merMinted?: Coin;
   /** total burned lion */
@@ -1040,16 +1042,19 @@ export const BatchSetCollateralRiskParamsProposal = {
 };
 
 function createBaseTotalBacking(): TotalBacking {
-  return { merMinted: undefined, lionBurned: undefined };
+  return { backingValue: "", merMinted: undefined, lionBurned: undefined };
 }
 
 export const TotalBacking = {
   encode(message: TotalBacking, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.backingValue !== "") {
+      writer.uint32(42).string(message.backingValue);
+    }
     if (message.merMinted !== undefined) {
-      Coin.encode(message.merMinted, writer.uint32(10).fork()).ldelim();
+      Coin.encode(message.merMinted, writer.uint32(18).fork()).ldelim();
     }
     if (message.lionBurned !== undefined) {
-      Coin.encode(message.lionBurned, writer.uint32(18).fork()).ldelim();
+      Coin.encode(message.lionBurned, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1061,10 +1066,13 @@ export const TotalBacking = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.merMinted = Coin.decode(reader, reader.uint32());
+        case 5:
+          message.backingValue = reader.string();
           break;
         case 2:
+          message.merMinted = Coin.decode(reader, reader.uint32());
+          break;
+        case 3:
           message.lionBurned = Coin.decode(reader, reader.uint32());
           break;
         default:
@@ -1077,6 +1085,7 @@ export const TotalBacking = {
 
   fromJSON(object: any): TotalBacking {
     return {
+      backingValue: isSet(object.backingValue) ? String(object.backingValue) : "",
       merMinted: isSet(object.merMinted) ? Coin.fromJSON(object.merMinted) : undefined,
       lionBurned: isSet(object.lionBurned) ? Coin.fromJSON(object.lionBurned) : undefined,
     };
@@ -1084,6 +1093,7 @@ export const TotalBacking = {
 
   toJSON(message: TotalBacking): unknown {
     const obj: any = {};
+    message.backingValue !== undefined && (obj.backingValue = message.backingValue);
     message.merMinted !== undefined &&
       (obj.merMinted = message.merMinted ? Coin.toJSON(message.merMinted) : undefined);
     message.lionBurned !== undefined &&
@@ -1093,6 +1103,7 @@ export const TotalBacking = {
 
   fromPartial<I extends Exact<DeepPartial<TotalBacking>, I>>(object: I): TotalBacking {
     const message = createBaseTotalBacking();
+    message.backingValue = object.backingValue ?? "";
     message.merMinted =
       object.merMinted !== undefined && object.merMinted !== null
         ? Coin.fromPartial(object.merMinted)
