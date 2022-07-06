@@ -31,9 +31,9 @@ export interface CollateralRiskParams {
   collateralDenom: string;
   /** whether enabled */
   enabled: boolean;
-  /** maximum total collateral amount */
+  /** maximum total collateral amount; empty means no limit */
   maxCollateral: string;
-  /** maximum total mintable Mer amount */
+  /** maximum total mintable Mer amount; empty means no limit */
   maxMerMint: string;
   /** ratio at which a position is defined as undercollateralized */
   liquidationThreshold: string;
@@ -152,20 +152,20 @@ export interface BatchSetCollateralRiskParamsProposal {
 }
 
 export interface TotalBacking {
-  /** total backing value in USD */
+  /** total backing value in uUSD */
   backingValue: string;
-  /** total minted mer */
+  /** total minted mer; negative value means burned mer */
   merMinted?: Coin;
-  /** total burned lion */
+  /** total burned lion; negative value means minted lion */
   lionBurned?: Coin;
 }
 
 export interface PoolBacking {
-  /** total minted mer */
+  /** total minted mer; negative value means burned mer */
   merMinted?: Coin;
   /** total backing */
   backing?: Coin;
-  /** total burned lion */
+  /** total burned lion; negative value means minted lion */
   lionBurned?: Coin;
 }
 

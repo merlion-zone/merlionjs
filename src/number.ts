@@ -58,7 +58,7 @@ export namespace Number {
 
 export class Dec extends Decimal implements Number<Dec> {
   constructor(arg?: Number.Input) {
-    super(new Decimal((arg ?? 0).toString()).toDecimalPlaces(DEC_PRECISION, Decimal.ROUND_DOWN));
+    super(new Decimal((arg || 0).toString()).toDecimalPlaces(DEC_PRECISION, Decimal.ROUND_DOWN));
   }
 
   public static withPrecision(value: Decimal.Value, precision: number): Dec {
@@ -146,7 +146,7 @@ const _Int = Decimal.clone();
  */
 export class Int extends _Int implements Number<Number.Output> {
   constructor(arg?: Number.Input) {
-    const _arg = new Decimal((arg ?? 0).toString());
+    const _arg = new Decimal((arg || 0).toString());
     super(_arg.divToInt(1));
   }
 
