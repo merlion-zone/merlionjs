@@ -297,7 +297,7 @@ export class MerlionClient extends StargateClient {
     assertDefined(this.signer);
     if (isEIP712Signer(this.signer)) {
       assert(messages.length === 1, "EIP712 signing only allows one message at present");
-      return this.signAminoEIP712(signerAddress, messages[0], fee, memo, signerData);
+      return this.signAminoEIP712(signerAddress, messages, fee, memo, signerData);
     } else if (isOfflineDirectSigner(this.signer)) {
       return this.signDirect(signerAddress, messages, fee, memo, signerData);
     } else {
@@ -307,15 +307,20 @@ export class MerlionClient extends StargateClient {
 
   private async signAminoEIP712(
     signerAddress: string,
-    message: EncodeObject,
+    messages: readonly EncodeObject[],
     fee: StdFee,
     memo: string,
     { accountNumber, sequence, chainId, pubkey }: SignerData,
   ): Promise<TxRaw> {
+    for (let i = 1; i < messages.length; i++) {
+      if (messages[i].typeUrl !== messages[0].typeUrl) {
+        throw new Error("EIP712 signing only support messages of the same type");
+      }
+    }
+
     const pubkeyAny = encodePubkey(pubkey);
     const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON;
 
-    const messages = [message];
     const msgs = messages.map((msg) => this.aminoTypes.toAmino(msg));
     let signDoc = makeSignDocAmino(msgs, fee, chainId, memo, accountNumber, sequence) as SignDocAmino;
     signDoc = {
@@ -327,7 +332,7 @@ export class MerlionClient extends StargateClient {
     };
 
     const eip155ChainId = new ChainId(chainId).eip155;
-    const eip712Types = this.eip712Registry.generateTypedDataTypes(message);
+    const eip712Types = this.eip712Registry.generateTypedDataTypes(messages[0]);
     const msgParams = eip712.createTypedData(eip712Types, eip155ChainId, signDoc);
     assertDefined(this.signer);
     assert(isEIP712Signer(this.signer));
