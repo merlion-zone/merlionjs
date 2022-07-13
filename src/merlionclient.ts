@@ -296,7 +296,6 @@ export class MerlionClient extends StargateClient {
     }
     assertDefined(this.signer);
     if (isEIP712Signer(this.signer)) {
-      assert(messages.length === 1, "EIP712 signing only allows one message at present");
       return this.signAminoEIP712(signerAddress, messages, fee, memo, signerData);
     } else if (isOfflineDirectSigner(this.signer)) {
       return this.signDirect(signerAddress, messages, fee, memo, signerData);
