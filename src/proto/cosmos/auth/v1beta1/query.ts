@@ -1,9 +1,10 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
+import { Params } from "../../../cosmos/auth/v1beta1/auth";
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
 import { Any } from "../../../google/protobuf/any";
-import { Params } from "../../../cosmos/auth/v1beta1/auth";
 
 export const protobufPackage = "cosmos.auth.v1beta1";
 

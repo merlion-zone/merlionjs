@@ -1,9 +1,10 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { Counterparty, Version } from "../../../../ibc/core/connection/v1/connection";
+
 import { Any } from "../../../../google/protobuf/any";
 import { Height } from "../../../../ibc/core/client/v1/client";
+import { Counterparty, Version } from "../../../../ibc/core/connection/v1/connection";
 
 export const protobufPackage = "ibc.core.connection.v1";
 

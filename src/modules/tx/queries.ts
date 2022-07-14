@@ -1,5 +1,6 @@
-import Long from "long";
 import { Pubkey } from "@cosmjs/amino";
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
+import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
 import {
   GetTxRequest,
@@ -13,8 +14,8 @@ import {
 } from "cosmjs-types/cosmos/tx/v1beta1/service";
 import { AuthInfo, Fee, Tx, TxBody } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { Any } from "cosmjs-types/google/protobuf/any";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination";
+import Long from "long";
+
 import { encodePubkey } from "../../proto-signing";
 
 export const EventTypeTx = "tx";

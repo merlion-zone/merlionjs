@@ -1,8 +1,9 @@
+import { QueryClient, createPagination, createProtobufRpcClient } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
-import { createPagination, createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { QueryClientImpl, QueryAirdropsResponse } from "../../proto/merlion/vesting/v1/query";
-import type { Airdrop } from "../../proto/merlion/vesting/v1/vesting";
+
 import type { Params } from "../../proto/merlion/vesting/v1/genesis";
+import { QueryAirdropsResponse, QueryClientImpl } from "../../proto/merlion/vesting/v1/query";
+import type { Airdrop } from "../../proto/merlion/vesting/v1/vesting";
 
 export interface VestingExtension {
   readonly vesting: {

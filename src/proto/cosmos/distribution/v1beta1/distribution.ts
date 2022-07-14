@@ -1,7 +1,8 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { DecCoin, Coin } from "../../../cosmos/base/v1beta1/coin";
+
+import { Coin, DecCoin } from "../../../cosmos/base/v1beta1/coin";
 
 export const protobufPackage = "cosmos.distribution.v1beta1";
 

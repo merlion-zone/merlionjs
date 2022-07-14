@@ -1,8 +1,9 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
-import { NFT, Class } from "../../../cosmos/nft/v1beta1/nft";
+import { Class, NFT } from "../../../cosmos/nft/v1beta1/nft";
 
 export const protobufPackage = "cosmos.nft.v1beta1";
 

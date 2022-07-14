@@ -1,7 +1,8 @@
-import { keccak256 } from "@cosmjs/crypto";
 import { Pubkey, pubkeyToRawAddress as cosmPubkeyToRawAddress } from "@cosmjs/amino";
-import { isEthSecp256k1Pubkey } from "./pubkey";
+import { keccak256 } from "@cosmjs/crypto";
 import { fromBase64, toBech32 } from "@cosmjs/encoding";
+
+import { isEthSecp256k1Pubkey } from "./pubkey";
 
 export function rawEthSecp256k1PubkeyToRawAddress(pubkeyData: Uint8Array): Uint8Array {
   if (pubkeyData.length !== 65) {

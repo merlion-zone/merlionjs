@@ -1,10 +1,11 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { Channel, IdentifiedChannel, PacketState } from "../../../../ibc/core/channel/v1/channel";
-import { Height, IdentifiedClientState } from "../../../../ibc/core/client/v1/client";
+
 import { PageRequest, PageResponse } from "../../../../cosmos/base/query/v1beta1/pagination";
 import { Any } from "../../../../google/protobuf/any";
+import { Channel, IdentifiedChannel, PacketState } from "../../../../ibc/core/channel/v1/channel";
+import { Height, IdentifiedClientState } from "../../../../ibc/core/client/v1/client";
 
 export const protobufPackage = "ibc.core.channel.v1";
 

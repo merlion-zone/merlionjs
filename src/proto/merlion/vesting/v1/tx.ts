@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { Airdrop } from "../../../merlion/vesting/v1/vesting";
 
 export const protobufPackage = "merlion.vesting.v1";

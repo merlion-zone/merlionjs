@@ -1,5 +1,16 @@
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
+
+import type { Params } from "../../proto/merlion/maker/v1/genesis";
+import type {
+  AccountCollateral,
+  BackingRiskParams,
+  CollateralRiskParams,
+  PoolBacking,
+  PoolCollateral,
+  TotalBacking,
+  TotalCollateral,
+} from "../../proto/merlion/maker/v1/maker";
 import {
   EstimateBurnBySwapInRequest,
   EstimateBurnBySwapInResponse,
@@ -20,16 +31,6 @@ import {
   QueryBackingRatioResponse,
   QueryClientImpl,
 } from "../../proto/merlion/maker/v1/query";
-import type {
-  AccountCollateral,
-  BackingRiskParams,
-  CollateralRiskParams,
-  PoolBacking,
-  PoolCollateral,
-  TotalBacking,
-  TotalCollateral,
-} from "../../proto/merlion/maker/v1/maker";
-import type { Params } from "../../proto/merlion/maker/v1/genesis";
 
 export interface MakerExtension {
   readonly maker: {

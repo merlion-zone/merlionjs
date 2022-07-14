@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { Metadata } from "../../../cosmos/bank/v1beta1/bank";
 
 export const protobufPackage = "merlion.bank.v1beta1";

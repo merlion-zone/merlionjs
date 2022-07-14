@@ -1,11 +1,12 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import {
-  Params,
-  ExchangeRateTuple,
   AggregateExchangeRatePrevote,
   AggregateExchangeRateVote,
+  ExchangeRateTuple,
+  Params,
 } from "../../../merlion/oracle/v1/oracle";
 
 export const protobufPackage = "merlion.oracle.v1";

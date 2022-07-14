@@ -1,5 +1,5 @@
-import { ethers } from "ethers";
 import { fromBech32, toBech32 } from "@cosmjs/encoding";
+import { ethers } from "ethers";
 
 export class Address {
   private readonly data: Uint8Array;

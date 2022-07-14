@@ -1,10 +1,10 @@
 import { Secp256k1, keccak256 } from "@cosmjs/crypto";
-import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
-import { DirectSignResponse, makeSignBytes } from "@cosmjs/proto-signing";
 import { toBech32 } from "@cosmjs/encoding";
+import { DirectSignResponse, makeSignBytes } from "@cosmjs/proto-signing";
+import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+
+import { encodeEthSecp256k1Signature, rawEthSecp256k1PubkeyToRawAddress } from "../amino";
 import { AccountData, OfflineDirectSigner } from "./signer";
-import { encodeEthSecp256k1Signature } from "../amino/signature";
-import { rawEthSecp256k1PubkeyToRawAddress } from "../amino/addresses";
 
 /**
  * A wallet that holds a single eth_secp256k1 keypair.

@@ -1,13 +1,14 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
+import { ProofSpec } from "../../../../confio/proofs";
 import { Duration } from "../../../../google/protobuf/duration";
+import { Timestamp } from "../../../../google/protobuf/timestamp";
 import { Height } from "../../../../ibc/core/client/v1/client";
 import { MerkleRoot } from "../../../../ibc/core/commitment/v1/commitment";
 import { SignedHeader } from "../../../../tendermint/types/types";
 import { ValidatorSet } from "../../../../tendermint/types/validator";
-import { Timestamp } from "../../../../google/protobuf/timestamp";
-import { ProofSpec } from "../../../../confio/proofs";
 
 export const protobufPackage = "ibc.lightclients.tendermint.v1";
 

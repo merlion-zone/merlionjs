@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { BaseAccount } from "../../../cosmos/auth/v1beta1/auth";
 
 export const protobufPackage = "ethermint.types.v1";

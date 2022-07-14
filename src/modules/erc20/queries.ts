@@ -1,8 +1,9 @@
+import { QueryClient, createPagination, createProtobufRpcClient } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
-import { createPagination, createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { QueryClientImpl, QueryTokenPairsResponse } from "../../proto/merlion/erc20/v1/query";
+
 import type { TokenPair } from "../../proto/merlion/erc20/v1/erc20";
 import type { Params } from "../../proto/merlion/erc20/v1/genesis";
+import { QueryClientImpl, QueryTokenPairsResponse } from "../../proto/merlion/erc20/v1/query";
 
 export interface Erc20Extension {
   readonly erc20: {

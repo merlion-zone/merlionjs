@@ -1,5 +1,5 @@
-import { Algo as CosmAlgo, DirectSignResponse } from "@cosmjs/proto-signing";
 import { OfflineAminoSigner } from "@cosmjs/amino";
+import { Algo as CosmAlgo, DirectSignResponse } from "@cosmjs/proto-signing";
 import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 
 export type Algo = "eth_secp256k1" | CosmAlgo;

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { Params } from "../../../merlion/voter/v1/genesis";
 
 export const protobufPackage = "merlion.voter.v1";

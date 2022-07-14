@@ -1,11 +1,11 @@
-import { Stream } from "xstream";
+import { QueryClient } from "@cosmjs/stargate";
 import {
   AbciInfoResponse,
   AbciQueryParams,
   AbciQueryResponse,
-  BlockchainResponse,
   BlockResponse,
   BlockResultsResponse,
+  BlockchainResponse,
   CommitResponse,
   GenesisResponse,
   HealthResponse,
@@ -23,7 +23,7 @@ import {
   ValidatorsResponse,
 } from "@cosmjs/tendermint-rpc";
 import { BlockSearchParams, BlockSearchResponse } from "@cosmjs/tendermint-rpc/build/tendermint34";
-import { QueryClient } from "@cosmjs/stargate";
+import { Stream } from "xstream";
 
 export interface TendermintExtension {
   readonly tendermint: {

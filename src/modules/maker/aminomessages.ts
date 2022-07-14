@@ -1,6 +1,7 @@
 import { AminoMsg } from "@cosmjs/amino";
 import type { AminoConverters } from "@cosmjs/stargate";
 import type { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+
 import type {
   MsgBurnByCollateral,
   MsgBurnBySwap,

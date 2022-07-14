@@ -1,8 +1,9 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { DenomTrace, Params } from "../../../../ibc/applications/transfer/v1/transfer";
+
 import { PageRequest, PageResponse } from "../../../../cosmos/base/query/v1beta1/pagination";
+import { DenomTrace, Params } from "../../../../ibc/applications/transfer/v1/transfer";
 
 export const protobufPackage = "ibc.applications.transfer.v1";
 

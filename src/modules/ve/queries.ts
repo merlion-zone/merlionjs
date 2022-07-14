@@ -1,8 +1,9 @@
-import Long from "long";
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
-import { QueryClientImpl } from "../../proto/merlion/ve/v1/query";
+import Long from "long";
+
 import type { Params } from "../../proto/merlion/ve/v1/genesis";
+import { QueryClientImpl } from "../../proto/merlion/ve/v1/query";
 
 export interface VeExtension {
   readonly ve: {

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { Params } from "../../../ethermint/feemarket/v1/feemarket";
 
 export const protobufPackage = "ethermint.feemarket.v1";

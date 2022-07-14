@@ -1,16 +1,17 @@
-import { Any } from "cosmjs-types/google/protobuf/any";
-import { Account } from "@cosmjs/stargate";
-import { BaseAccount, ModuleAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
-import { EthAccount } from "./proto/ethermint/types/v1/account";
 import { Uint64 } from "@cosmjs/math";
+import { Account } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
+import { BaseAccount, ModuleAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import {
   BaseVestingAccount,
   ContinuousVestingAccount,
   DelayedVestingAccount,
   PeriodicVestingAccount,
 } from "cosmjs-types/cosmos/vesting/v1beta1/vesting";
+import { Any } from "cosmjs-types/google/protobuf/any";
+
 import { decodePubkey } from "./proto-signing/pubkey";
+import { EthAccount } from "./proto/ethermint/types/v1/account";
 
 function uint64FromProto(input: number | Long): Uint64 {
   return Uint64.fromString(input.toString());

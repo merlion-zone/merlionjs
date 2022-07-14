@@ -1,8 +1,9 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
-import { Params, TraceConfig, Log } from "../../../ethermint/evm/v1/evm";
+import { Log, Params, TraceConfig } from "../../../ethermint/evm/v1/evm";
 import { MsgEthereumTx, MsgEthereumTxResponse } from "../../../ethermint/evm/v1/tx";
 import { Timestamp } from "../../../google/protobuf/timestamp";
 

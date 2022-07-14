@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { Class, NFT } from "../../../cosmos/nft/v1beta1/nft";
 
 export const protobufPackage = "cosmos.nft.v1beta1";

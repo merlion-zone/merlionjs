@@ -1,4 +1,5 @@
 import { EncodeObject, GeneratedType } from "@cosmjs/proto-signing";
+
 import {
   MsgBurnByCollateral,
   MsgBurnBySwap,

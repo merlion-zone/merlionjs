@@ -1,4 +1,5 @@
 import { Coin as CosmCoin, DecCoin as CosmDecCoin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+
 import { Dec, Int, Number } from "./number";
 
 /**

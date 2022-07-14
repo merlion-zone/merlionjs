@@ -1,54 +1,55 @@
+import { Pubkey, makeSignDoc as makeSignDocAmino } from "@cosmjs/amino";
+import { fromBase64, toHex } from "@cosmjs/encoding";
+import { Int53, Uint53 } from "@cosmjs/math";
+import {
+  EncodeObject,
+  Registry,
+  TxBodyEncodeObject,
+  makeAuthInfoBytes,
+  makeSignDoc,
+} from "@cosmjs/proto-signing";
 import {
   Account,
   AminoTypes,
   AuthExtension,
   BankExtension,
-  calculateFee,
   DeliverTxResponse,
   GasPrice,
   HttpEndpoint,
   MsgSendEncodeObject,
   QueryClient,
-  setupAuthExtension,
-  setupBankExtension,
-  setupStakingExtension,
-  SignerData as StargateSignerData,
   SigningStargateClientOptions,
   StakingExtension,
   StargateClient,
+  SignerData as StargateSignerData,
   StdFee,
   TxExtension,
+  calculateFee,
+  setupAuthExtension,
+  setupBankExtension,
+  setupStakingExtension,
 } from "@cosmjs/stargate";
-import {
-  EncodeObject,
-  makeAuthInfoBytes,
-  makeSignDoc,
-  Registry,
-  TxBodyEncodeObject,
-} from "@cosmjs/proto-signing";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc";
 import { assert, assertDefined } from "@cosmjs/utils";
-import { makeSignDoc as makeSignDocAmino, Pubkey } from "@cosmjs/amino";
-import { fromBase64, toHex } from "@cosmjs/encoding";
-import { Int53, Uint53 } from "@cosmjs/math";
-import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
-import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
-import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
 import { TxMsgData } from "cosmjs-types/cosmos/base/abci/v1beta1/abci";
-import { ChainId } from "./chainid";
+import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
+import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+
+import { accountFromAny } from "./account";
 import { Address } from "./address";
-import { EIP712Signer, isEIP712Signer, signWeb3Extension } from "./web3extension";
+import { encodeEthSecp256k1Pubkey } from "./amino";
+import { ChainId } from "./chainid";
 import * as eip712 from "./eip712";
+import { SignDocAmino } from "./eip712";
 import { createDefaultRegistry } from "./modules";
 import { createDefaultEIP712Registry } from "./modules";
 import { createDefaultAminoTypes } from "./modules";
 import { typeUrls } from "./modules";
-import { encodeEthSecp256k1Pubkey } from "./amino";
-import { accountFromAny } from "./account";
-import { SignDocAmino } from "./eip712";
-import { encodePubkey, isOfflineDirectSigner, OfflineSigner } from "./proto-signing";
-import { SequenceManager } from "./sequenceManager";
 import { setupTxExtension } from "./modules";
+import { OfflineSigner, encodePubkey, isOfflineDirectSigner } from "./proto-signing";
+import { SequenceManager } from "./sequenceManager";
+import { EIP712Signer, isEIP712Signer, signWeb3Extension } from "./web3extension";
 
 export interface MerlionClientOptions extends SigningStargateClientOptions {
   readonly eip712Registry?: eip712.Registry;

@@ -1,5 +1,6 @@
-import { generateTypedDataTypes, TypedDataTypes, TypedDataTypesMsgValue } from "./types";
 import { EncodeObject } from "@cosmjs/proto-signing";
+
+import { TypedDataTypes, TypedDataTypesMsgValue, generateTypedDataTypes } from "./types";
 
 export class Registry {
   private readonly types: Map<string, TypedDataTypesMsgValue>;

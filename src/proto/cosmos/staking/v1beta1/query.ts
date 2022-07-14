@@ -1,15 +1,16 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
 import {
-  Validator,
   DelegationResponse,
-  UnbondingDelegation,
   HistoricalInfo,
-  Pool,
   Params,
+  Pool,
   RedelegationResponse,
+  UnbondingDelegation,
+  Validator,
 } from "../../../cosmos/staking/v1beta1/staking";
 
 export const protobufPackage = "cosmos.staking.v1beta1";

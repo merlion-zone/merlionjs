@@ -1,14 +1,15 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
+import { PageRequest, PageResponse } from "../../../../cosmos/base/query/v1beta1/pagination";
 import { Any } from "../../../../google/protobuf/any";
 import {
-  Height,
-  Params,
-  IdentifiedClientState,
   ConsensusStateWithHeight,
+  Height,
+  IdentifiedClientState,
+  Params,
 } from "../../../../ibc/core/client/v1/client";
-import { PageRequest, PageResponse } from "../../../../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "ibc.core.client.v1";
 

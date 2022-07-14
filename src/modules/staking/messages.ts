@@ -1,6 +1,7 @@
 import { EncodeObject, GeneratedType } from "@cosmjs/proto-signing";
-import { MsgBeginRedelegate } from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import { stakingTypes as cosmStakingTypes } from "@cosmjs/stargate/build/modules";
+import { MsgBeginRedelegate } from "cosmjs-types/cosmos/staking/v1beta1/tx";
+
 import { typeUrls } from "../typeurls";
 
 export const stakingTypes: ReadonlyArray<[string, GeneratedType]> = [

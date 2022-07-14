@@ -1,6 +1,7 @@
-import { decodeSignature as cosmDecodeSignature, encodeSecp256k1Pubkey, StdSignature } from "@cosmjs/amino";
-import { encodeEthSecp256k1Pubkey } from "./encoding";
+import { StdSignature, decodeSignature as cosmDecodeSignature, encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { fromBase64, toBase64 } from "@cosmjs/encoding";
+
+import { encodeEthSecp256k1Pubkey } from "./encoding";
 import { pubkeyType } from "./pubkey";
 
 /**

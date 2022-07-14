@@ -1,15 +1,16 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import {
-  Params,
-  ValidatorOutstandingRewards,
-  ValidatorAccumulatedCommission,
-  ValidatorSlashEvent,
-  DelegationDelegatorReward,
-} from "../../../cosmos/distribution/v1beta1/distribution";
+
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
 import { DecCoin } from "../../../cosmos/base/v1beta1/coin";
+import {
+  DelegationDelegatorReward,
+  Params,
+  ValidatorAccumulatedCommission,
+  ValidatorOutstandingRewards,
+  ValidatorSlashEvent,
+} from "../../../cosmos/distribution/v1beta1/distribution";
 
 export const protobufPackage = "cosmos.distribution.v1beta1";
 

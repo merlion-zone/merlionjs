@@ -1,9 +1,10 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
+
 import { PageRequest, PageResponse } from "../../../cosmos/base/query/v1beta1/pagination";
-import { Airdrop } from "../../../merlion/vesting/v1/vesting";
 import { Params } from "../../../merlion/vesting/v1/genesis";
+import { Airdrop } from "../../../merlion/vesting/v1/vesting";
 
 export const protobufPackage = "merlion.vesting.v1";
 

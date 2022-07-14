@@ -1,10 +1,11 @@
-import { encodeSecp256k1Pubkey, MultisigThresholdPubkey, Pubkey, SinglePubkey } from "@cosmjs/amino";
-import { Any } from "cosmjs-types/google/protobuf/any";
-import { PubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys";
+import { MultisigThresholdPubkey, Pubkey, SinglePubkey, encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { fromBase64 } from "@cosmjs/encoding";
 import { encodePubkey as cosmEncodePubkey } from "@cosmjs/proto-signing";
 import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys";
-import { isEthSecp256k1Pubkey, encodeEthSecp256k1Pubkey } from "../amino";
+import { PubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys";
+import { Any } from "cosmjs-types/google/protobuf/any";
+
+import { encodeEthSecp256k1Pubkey, isEthSecp256k1Pubkey } from "../amino";
 
 export function encodePubkey(pubkey: Pubkey): Any {
   if (isEthSecp256k1Pubkey(pubkey)) {

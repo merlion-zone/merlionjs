@@ -1,10 +1,11 @@
-import Long from "long";
-import { ethers } from "ethers";
-import { EncodeObject } from "@cosmjs/proto-signing";
 import { Secp256k1 } from "@cosmjs/crypto";
+import { EncodeObject } from "@cosmjs/proto-signing";
+import { ethers } from "ethers";
+import Long from "long";
+
 import { TypedData } from "./eip712";
-import { OfflineSigner } from "./proto-signing";
 import { web3 } from "./proto";
+import { OfflineSigner } from "./proto-signing";
 
 export interface EIP712Signer {
   readonly getAddress: () => Promise<string>;

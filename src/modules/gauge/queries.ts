@@ -1,5 +1,6 @@
+import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import { assert } from "@cosmjs/utils";
-import { createProtobufRpcClient, QueryClient } from "@cosmjs/stargate";
+
 import { QueryClientImpl } from "../../proto/merlion/gauge/v1/query";
 
 export interface GaugeExtension {

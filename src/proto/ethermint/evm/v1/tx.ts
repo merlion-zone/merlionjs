@@ -1,8 +1,9 @@
 /* eslint-disable */
 import Long from "long";
 import * as _m0 from "protobufjs/minimal";
-import { Any } from "../../../google/protobuf/any";
+
 import { AccessTuple, Log } from "../../../ethermint/evm/v1/evm";
+import { Any } from "../../../google/protobuf/any";
 
 export const protobufPackage = "ethermint.evm.v1";
 
