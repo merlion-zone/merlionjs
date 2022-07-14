@@ -219,12 +219,11 @@ export function createMakerAminoConverters(): AminoConverters {
     },
     [typeUrls.MsgMintByCollateral]: {
       aminoType: "merlion/MsgMintByCollateral",
-      toAmino: ({ sender, to, collateralDenom, ltv, mintOutMin }: MsgMintByCollateral) => ({
+      toAmino: ({ sender, to, collateralDenom, mintOut }: MsgMintByCollateral) => ({
         sender,
         to,
         collateral_denom: collateralDenom,
-        ltv,
-        mint_out_min: mintOutMin,
+        mint_out_min: mintOut,
       }),
       fromAmino: ({
         sender,
@@ -255,10 +254,11 @@ export function createMakerAminoConverters(): AminoConverters {
     },
     [typeUrls.MsgDepositCollateral]: {
       aminoType: "merlion/MsgDepositCollateral",
-      toAmino: ({ sender, to, collateral }: MsgDepositCollateral) => ({
+      toAmino: ({ sender, to, collateralIn, lionIn }: MsgDepositCollateral) => ({
         sender,
         to,
-        collateral,
+        collateralIn,
+        lionIn,
       }),
       fromAmino: ({ sender, to, collateral }: AminoMsgDepositCollateral["value"]) => ({
         sender,
@@ -268,10 +268,11 @@ export function createMakerAminoConverters(): AminoConverters {
     },
     [typeUrls.MsgRedeemCollateral]: {
       aminoType: "merlion/MsgRedeemCollateral",
-      toAmino: ({ sender, to, collateral }: MsgRedeemCollateral) => ({
+      toAmino: ({ sender, to, collateralOut, lionOut }: MsgRedeemCollateral) => ({
         sender,
         to,
-        collateral,
+        collateralOut,
+        lionOut,
       }),
       fromAmino: ({ sender, to, collateral }: AminoMsgRedeemCollateral["value"]) => ({
         sender,

@@ -20,8 +20,6 @@ import {
   EstimateBuyBackingInResponse,
   EstimateBuyBackingOutRequest,
   EstimateBuyBackingOutResponse,
-  EstimateMintByCollateralInRequest,
-  EstimateMintByCollateralInResponse,
   EstimateMintBySwapInRequest,
   EstimateMintBySwapInResponse,
   EstimateMintBySwapOutRequest,
@@ -66,9 +64,6 @@ export interface MakerExtension {
     readonly estimateSellBackingOut: (
       request: EstimateSellBackingOutRequest,
     ) => Promise<EstimateSellBackingOutResponse>;
-    readonly estimateMintByCollateralIn: (
-      request: EstimateMintByCollateralInRequest,
-    ) => Promise<EstimateMintByCollateralInResponse>;
   };
 }
 
@@ -179,13 +174,6 @@ export function setupMakerExtension(base: QueryClient): MakerExtension {
         request: EstimateSellBackingOutRequest,
       ): Promise<EstimateSellBackingOutResponse> => {
         const resp = await queryService.EstimateSellBackingOut(request);
-        assert(resp);
-        return resp;
-      },
-      estimateMintByCollateralIn: async (
-        request: EstimateMintByCollateralInRequest,
-      ): Promise<EstimateMintByCollateralInResponse> => {
-        const resp = await queryService.EstimateMintByCollateralIn(request);
         assert(resp);
         return resp;
       },
