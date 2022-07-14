@@ -49,7 +49,7 @@ export interface CollateralRiskParams {
    */
   basicLoanToValue: string;
   /**
-   * catalytic ratio of burned Lion to minted stablecoins, to maximize the LTV
+   * catalytic ratio of collateralized Lion to asset, to maximize the LTV
    * in [basic-LTV, LTV]
    */
   catalyticLionRatio: string;
@@ -178,10 +178,8 @@ export interface TotalCollateral {
    * interest
    */
   merDebt?: Coin;
-  /** total minted mer by burning lion */
-  merByLion?: Coin;
-  /** total burned lion */
-  lionBurned?: Coin;
+  /** total collateralized lion */
+  lionCollateralized?: Coin;
 }
 
 export interface PoolCollateral {
@@ -192,10 +190,8 @@ export interface PoolCollateral {
    * interest
    */
   merDebt?: Coin;
-  /** total minted mer by burning lion */
-  merByLion?: Coin;
-  /** total burned lion */
-  lionBurned?: Coin;
+  /** total collateralized lion */
+  lionCollateralized?: Coin;
 }
 
 export interface AccountCollateral {
@@ -205,11 +201,9 @@ export interface AccountCollateral {
   collateral?: Coin;
   /** remaining mer debt, including minted by collateral, mint fee, last interest */
   merDebt?: Coin;
-  /** minted mer by burning lion */
-  merByLion?: Coin;
-  /** total burned lion */
-  lionBurned?: Coin;
-  /** remaining interest debt after last settlement */
+  /** total collateralized lion */
+  lionCollateralized?: Coin;
+  /** remaining interest debt at last settlement */
   lastInterest?: Coin;
   /** the block of last settlement */
   lastSettlementBlock: Long;
@@ -1049,7 +1043,7 @@ function createBaseTotalBacking(): TotalBacking {
 export const TotalBacking = {
   encode(message: TotalBacking, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.backingValue !== "") {
-      writer.uint32(42).string(message.backingValue);
+      writer.uint32(10).string(message.backingValue);
     }
     if (message.merMinted !== undefined) {
       Coin.encode(message.merMinted, writer.uint32(18).fork()).ldelim();
@@ -1067,7 +1061,7 @@ export const TotalBacking = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 5:
+        case 1:
           message.backingValue = reader.string();
           break;
         case 2:
@@ -1234,7 +1228,7 @@ export const AccountBacking = {
 };
 
 function createBaseTotalCollateral(): TotalCollateral {
-  return { merDebt: undefined, merByLion: undefined, lionBurned: undefined };
+  return { merDebt: undefined, lionCollateralized: undefined };
 }
 
 export const TotalCollateral = {
@@ -1242,11 +1236,8 @@ export const TotalCollateral = {
     if (message.merDebt !== undefined) {
       Coin.encode(message.merDebt, writer.uint32(10).fork()).ldelim();
     }
-    if (message.merByLion !== undefined) {
-      Coin.encode(message.merByLion, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.lionBurned !== undefined) {
-      Coin.encode(message.lionBurned, writer.uint32(26).fork()).ldelim();
+    if (message.lionCollateralized !== undefined) {
+      Coin.encode(message.lionCollateralized, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1262,10 +1253,7 @@ export const TotalCollateral = {
           message.merDebt = Coin.decode(reader, reader.uint32());
           break;
         case 2:
-          message.merByLion = Coin.decode(reader, reader.uint32());
-          break;
-        case 3:
-          message.lionBurned = Coin.decode(reader, reader.uint32());
+          message.lionCollateralized = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1278,8 +1266,9 @@ export const TotalCollateral = {
   fromJSON(object: any): TotalCollateral {
     return {
       merDebt: isSet(object.merDebt) ? Coin.fromJSON(object.merDebt) : undefined,
-      merByLion: isSet(object.merByLion) ? Coin.fromJSON(object.merByLion) : undefined,
-      lionBurned: isSet(object.lionBurned) ? Coin.fromJSON(object.lionBurned) : undefined,
+      lionCollateralized: isSet(object.lionCollateralized)
+        ? Coin.fromJSON(object.lionCollateralized)
+        : undefined,
     };
   },
 
@@ -1287,10 +1276,10 @@ export const TotalCollateral = {
     const obj: any = {};
     message.merDebt !== undefined &&
       (obj.merDebt = message.merDebt ? Coin.toJSON(message.merDebt) : undefined);
-    message.merByLion !== undefined &&
-      (obj.merByLion = message.merByLion ? Coin.toJSON(message.merByLion) : undefined);
-    message.lionBurned !== undefined &&
-      (obj.lionBurned = message.lionBurned ? Coin.toJSON(message.lionBurned) : undefined);
+    message.lionCollateralized !== undefined &&
+      (obj.lionCollateralized = message.lionCollateralized
+        ? Coin.toJSON(message.lionCollateralized)
+        : undefined);
     return obj;
   },
 
@@ -1298,20 +1287,16 @@ export const TotalCollateral = {
     const message = createBaseTotalCollateral();
     message.merDebt =
       object.merDebt !== undefined && object.merDebt !== null ? Coin.fromPartial(object.merDebt) : undefined;
-    message.merByLion =
-      object.merByLion !== undefined && object.merByLion !== null
-        ? Coin.fromPartial(object.merByLion)
-        : undefined;
-    message.lionBurned =
-      object.lionBurned !== undefined && object.lionBurned !== null
-        ? Coin.fromPartial(object.lionBurned)
+    message.lionCollateralized =
+      object.lionCollateralized !== undefined && object.lionCollateralized !== null
+        ? Coin.fromPartial(object.lionCollateralized)
         : undefined;
     return message;
   },
 };
 
 function createBasePoolCollateral(): PoolCollateral {
-  return { collateral: undefined, merDebt: undefined, merByLion: undefined, lionBurned: undefined };
+  return { collateral: undefined, merDebt: undefined, lionCollateralized: undefined };
 }
 
 export const PoolCollateral = {
@@ -1322,11 +1307,8 @@ export const PoolCollateral = {
     if (message.merDebt !== undefined) {
       Coin.encode(message.merDebt, writer.uint32(18).fork()).ldelim();
     }
-    if (message.merByLion !== undefined) {
-      Coin.encode(message.merByLion, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.lionBurned !== undefined) {
-      Coin.encode(message.lionBurned, writer.uint32(34).fork()).ldelim();
+    if (message.lionCollateralized !== undefined) {
+      Coin.encode(message.lionCollateralized, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1345,10 +1327,7 @@ export const PoolCollateral = {
           message.merDebt = Coin.decode(reader, reader.uint32());
           break;
         case 3:
-          message.merByLion = Coin.decode(reader, reader.uint32());
-          break;
-        case 4:
-          message.lionBurned = Coin.decode(reader, reader.uint32());
+          message.lionCollateralized = Coin.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1362,8 +1341,9 @@ export const PoolCollateral = {
     return {
       collateral: isSet(object.collateral) ? Coin.fromJSON(object.collateral) : undefined,
       merDebt: isSet(object.merDebt) ? Coin.fromJSON(object.merDebt) : undefined,
-      merByLion: isSet(object.merByLion) ? Coin.fromJSON(object.merByLion) : undefined,
-      lionBurned: isSet(object.lionBurned) ? Coin.fromJSON(object.lionBurned) : undefined,
+      lionCollateralized: isSet(object.lionCollateralized)
+        ? Coin.fromJSON(object.lionCollateralized)
+        : undefined,
     };
   },
 
@@ -1373,10 +1353,10 @@ export const PoolCollateral = {
       (obj.collateral = message.collateral ? Coin.toJSON(message.collateral) : undefined);
     message.merDebt !== undefined &&
       (obj.merDebt = message.merDebt ? Coin.toJSON(message.merDebt) : undefined);
-    message.merByLion !== undefined &&
-      (obj.merByLion = message.merByLion ? Coin.toJSON(message.merByLion) : undefined);
-    message.lionBurned !== undefined &&
-      (obj.lionBurned = message.lionBurned ? Coin.toJSON(message.lionBurned) : undefined);
+    message.lionCollateralized !== undefined &&
+      (obj.lionCollateralized = message.lionCollateralized
+        ? Coin.toJSON(message.lionCollateralized)
+        : undefined);
     return obj;
   },
 
@@ -1388,13 +1368,9 @@ export const PoolCollateral = {
         : undefined;
     message.merDebt =
       object.merDebt !== undefined && object.merDebt !== null ? Coin.fromPartial(object.merDebt) : undefined;
-    message.merByLion =
-      object.merByLion !== undefined && object.merByLion !== null
-        ? Coin.fromPartial(object.merByLion)
-        : undefined;
-    message.lionBurned =
-      object.lionBurned !== undefined && object.lionBurned !== null
-        ? Coin.fromPartial(object.lionBurned)
+    message.lionCollateralized =
+      object.lionCollateralized !== undefined && object.lionCollateralized !== null
+        ? Coin.fromPartial(object.lionCollateralized)
         : undefined;
     return message;
   },
@@ -1405,8 +1381,7 @@ function createBaseAccountCollateral(): AccountCollateral {
     account: "",
     collateral: undefined,
     merDebt: undefined,
-    merByLion: undefined,
-    lionBurned: undefined,
+    lionCollateralized: undefined,
     lastInterest: undefined,
     lastSettlementBlock: Long.ZERO,
   };
@@ -1423,17 +1398,14 @@ export const AccountCollateral = {
     if (message.merDebt !== undefined) {
       Coin.encode(message.merDebt, writer.uint32(26).fork()).ldelim();
     }
-    if (message.merByLion !== undefined) {
-      Coin.encode(message.merByLion, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.lionBurned !== undefined) {
-      Coin.encode(message.lionBurned, writer.uint32(42).fork()).ldelim();
+    if (message.lionCollateralized !== undefined) {
+      Coin.encode(message.lionCollateralized, writer.uint32(34).fork()).ldelim();
     }
     if (message.lastInterest !== undefined) {
-      Coin.encode(message.lastInterest, writer.uint32(50).fork()).ldelim();
+      Coin.encode(message.lastInterest, writer.uint32(42).fork()).ldelim();
     }
     if (!message.lastSettlementBlock.isZero()) {
-      writer.uint32(56).int64(message.lastSettlementBlock);
+      writer.uint32(48).int64(message.lastSettlementBlock);
     }
     return writer;
   },
@@ -1455,15 +1427,12 @@ export const AccountCollateral = {
           message.merDebt = Coin.decode(reader, reader.uint32());
           break;
         case 4:
-          message.merByLion = Coin.decode(reader, reader.uint32());
+          message.lionCollateralized = Coin.decode(reader, reader.uint32());
           break;
         case 5:
-          message.lionBurned = Coin.decode(reader, reader.uint32());
-          break;
-        case 6:
           message.lastInterest = Coin.decode(reader, reader.uint32());
           break;
-        case 7:
+        case 6:
           message.lastSettlementBlock = reader.int64() as Long;
           break;
         default:
@@ -1479,8 +1448,9 @@ export const AccountCollateral = {
       account: isSet(object.account) ? String(object.account) : "",
       collateral: isSet(object.collateral) ? Coin.fromJSON(object.collateral) : undefined,
       merDebt: isSet(object.merDebt) ? Coin.fromJSON(object.merDebt) : undefined,
-      merByLion: isSet(object.merByLion) ? Coin.fromJSON(object.merByLion) : undefined,
-      lionBurned: isSet(object.lionBurned) ? Coin.fromJSON(object.lionBurned) : undefined,
+      lionCollateralized: isSet(object.lionCollateralized)
+        ? Coin.fromJSON(object.lionCollateralized)
+        : undefined,
       lastInterest: isSet(object.lastInterest) ? Coin.fromJSON(object.lastInterest) : undefined,
       lastSettlementBlock: isSet(object.lastSettlementBlock)
         ? Long.fromValue(object.lastSettlementBlock)
@@ -1495,10 +1465,10 @@ export const AccountCollateral = {
       (obj.collateral = message.collateral ? Coin.toJSON(message.collateral) : undefined);
     message.merDebt !== undefined &&
       (obj.merDebt = message.merDebt ? Coin.toJSON(message.merDebt) : undefined);
-    message.merByLion !== undefined &&
-      (obj.merByLion = message.merByLion ? Coin.toJSON(message.merByLion) : undefined);
-    message.lionBurned !== undefined &&
-      (obj.lionBurned = message.lionBurned ? Coin.toJSON(message.lionBurned) : undefined);
+    message.lionCollateralized !== undefined &&
+      (obj.lionCollateralized = message.lionCollateralized
+        ? Coin.toJSON(message.lionCollateralized)
+        : undefined);
     message.lastInterest !== undefined &&
       (obj.lastInterest = message.lastInterest ? Coin.toJSON(message.lastInterest) : undefined);
     message.lastSettlementBlock !== undefined &&
@@ -1515,13 +1485,9 @@ export const AccountCollateral = {
         : undefined;
     message.merDebt =
       object.merDebt !== undefined && object.merDebt !== null ? Coin.fromPartial(object.merDebt) : undefined;
-    message.merByLion =
-      object.merByLion !== undefined && object.merByLion !== null
-        ? Coin.fromPartial(object.merByLion)
-        : undefined;
-    message.lionBurned =
-      object.lionBurned !== undefined && object.lionBurned !== null
-        ? Coin.fromPartial(object.lionBurned)
+    message.lionCollateralized =
+      object.lionCollateralized !== undefined && object.lionCollateralized !== null
+        ? Coin.fromPartial(object.lionCollateralized)
         : undefined;
     message.lastInterest =
       object.lastInterest !== undefined && object.lastInterest !== null

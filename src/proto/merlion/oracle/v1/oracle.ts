@@ -154,13 +154,13 @@ export const Params = {
       writer.uint32(32).uint64(message.rewardDistributionWindow);
     }
     if (message.slashFraction !== "") {
-      writer.uint32(50).string(message.slashFraction);
+      writer.uint32(42).string(message.slashFraction);
     }
     if (!message.slashWindow.isZero()) {
-      writer.uint32(56).uint64(message.slashWindow);
+      writer.uint32(48).uint64(message.slashWindow);
     }
     if (message.minValidPerWindow !== "") {
-      writer.uint32(66).string(message.minValidPerWindow);
+      writer.uint32(58).string(message.minValidPerWindow);
     }
     return writer;
   },
@@ -184,13 +184,13 @@ export const Params = {
         case 4:
           message.rewardDistributionWindow = reader.uint64() as Long;
           break;
-        case 6:
+        case 5:
           message.slashFraction = reader.string();
           break;
-        case 7:
+        case 6:
           message.slashWindow = reader.uint64() as Long;
           break;
-        case 8:
+        case 7:
           message.minValidPerWindow = reader.string();
           break;
         default:
