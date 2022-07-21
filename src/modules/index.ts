@@ -7,6 +7,7 @@ export * from "./maker/queries";
 export * from "./oracle/messages";
 export * from "./oracle/queries";
 export * from "./staking/messages";
+export * from './staking/queries'
 export * from "./tx/queries";
 export * from "./ve/queries";
 export * from "./vesting/queries";
