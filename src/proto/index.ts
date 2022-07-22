@@ -9,6 +9,16 @@ export * as feemarket from "./ethermint/feemarket/v1/feemarket";
 export * as feemarketGenesis from "./ethermint/feemarket/v1/genesis";
 export * as feemarketQuery from "./ethermint/feemarket/v1/query";
 
+export * as gravityAttestation from "./gravity/v1/attestation";
+export * as gravityBatch from "./gravity/v1/batch";
+export * as gravityEthereumSigners from "./gravity/v1/ethereum_signer";
+export * as gravityGenesis from "./gravity/v1/genesis";
+export * as gravityPool from "./gravity/v1/pool";
+export * as gravityTypes from "./gravity/v1/types";
+export * as mgravityTx from "./multigravity/v1/msgs";
+export * as mgravityQuery from "./multigravity/v1/query";
+export * as mgravityTypes from "./multigravity/v1/types";
+
 export * as erc20 from "./merlion/erc20/v1/erc20";
 export * as erc20Genesis from "./merlion/erc20/v1/genesis";
 export * as erc20Tx from "./merlion/erc20/v1/tx";

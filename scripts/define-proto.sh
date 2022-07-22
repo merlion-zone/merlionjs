@@ -113,7 +113,19 @@ protoc \
   "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/feemarket/v1/genesis.proto" \
   "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/feemarket/v1/query.proto" \
   "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/types/v1/account.proto" \
-  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/types/v1/web3.proto"
+  "$MERLION_THIRD_PARTY_PROTO_DIR/ethermint/types/v1/web3.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/attestation.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/batch.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/ethereum_signer.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/genesis.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/msgs.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/pool.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/query.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/gravity/v1/types.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/multigravity/v1/genesis.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/multigravity/v1/msgs.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/multigravity/v1/query.proto" \
+  "$MERLION_THIRD_PARTY_PROTO_DIR/multigravity/v1/types.proto"
 
 # Remove unnecessary files
 rm -rf \
