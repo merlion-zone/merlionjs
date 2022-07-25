@@ -10,6 +10,7 @@ import {
 } from "@cosmjs/stargate/build/modules";
 import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
 
+import { gravityTypes } from "./gravity/messages";
 import { makerTypes } from "./maker/messages";
 import { oracleTypes } from "./oracle/messages";
 import { stakingTypes } from "./staking/messages";
@@ -20,6 +21,7 @@ export const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
   ...bankTypes,
   ...distributionTypes,
   ...feegrantTypes,
+  ...gravityTypes,
   ...govTypes,
   ...stakingTypes,
   ...ibcTypes,
