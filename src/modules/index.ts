@@ -2,6 +2,7 @@ export * from "./erc20/queries";
 export * from "./gauge/queries";
 export * from "./gov/queries";
 export * from "./gravity/queries";
+export * from "./gravity/messages";
 export * from "./maker/aminomessages";
 export * from "./maker/messages";
 export * from "./maker/queries";
