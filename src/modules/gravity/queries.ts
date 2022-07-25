@@ -67,7 +67,7 @@ export interface GravityExtension {
     ) => Promise<QueryLastEventNonceByAddrResponse>;
     readonly batchFees: (chainIdentifier: string) => Promise<QueryBatchFeeResponse>;
     readonly outgoingTxBatches: (chainIdentifier: string) => Promise<QueryOutgoingTxBatchesResponse>;
-    readonly outgoingLogicCalls: (chainIdentigier: string) => Promise<QueryOutgoingLogicCallsResponse>;
+    readonly outgoingLogicCalls: (chainIdentifier: string) => Promise<QueryOutgoingLogicCallsResponse>;
     readonly batchRequestByNonce: (
       nonce: number,
       contractAddress: string,

@@ -65,4 +65,10 @@ export const typeUrls = {
   EthereumLegacyTx: "/ethermint.evm.v1.LegacyTx",
   EthereumAccessListTx: "/ethermint.evm.v1.AccessListTx",
   EthereumDynamicFeeTx: "/ethermint.evm.v1.DynamicFeeTx",
+  // gravity
+  MsgSetOrchestratorAddress: "/gravity.v1.MsgSetOrchestratorAddress",
+  MsgSendToEth: "/multigravity.v1.MsgSendToEth",
+  MsgCancelSendToEth: "/multigravity.v1.MsgCancelSendToEth",
+  MsgRequestBatch: "/multigravity.v1.MsgRequestBatch",
+  MsgSubmitBadSignatureEvidence: "/multigravity.v1.MsgSubmitBadSignatureEvidence",
 } as const;

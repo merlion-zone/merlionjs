@@ -21,13 +21,13 @@ export const defaultRegistryTypes: ReadonlyArray<[string, GeneratedType]> = [
   ...bankTypes,
   ...distributionTypes,
   ...feegrantTypes,
-  ...gravityTypes,
   ...govTypes,
   ...stakingTypes,
   ...ibcTypes,
   ...vestingTypes,
   ...oracleTypes,
   ...makerTypes,
+  ...gravityTypes,
 ];
 
 export function createDefaultRegistry(): Registry {
