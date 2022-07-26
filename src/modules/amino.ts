@@ -11,6 +11,7 @@ import {
 } from "@cosmjs/stargate";
 import { createVestingAminoConverters } from "@cosmjs/stargate/build/modules";
 
+import { createGravityAminoConverters } from "./gravity/aminomessages";
 import { createMakerAminoConverters } from "./maker/aminomessages";
 
 export function createDefaultAminoTypes(prefix: string): AminoTypes {
@@ -24,6 +25,7 @@ export function createDefaultAminoTypes(prefix: string): AminoTypes {
     ...createFreegrantAminoConverters(),
     ...createVestingAminoConverters(),
     ...createMakerAminoConverters(),
+    ...createGravityAminoConverters(),
   };
   return new AminoTypes(converters);
 }
