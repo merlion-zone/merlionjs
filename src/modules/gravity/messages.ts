@@ -14,7 +14,7 @@ import {
   MsgSubmitBadSignatureEvidence,
   MsgValsetConfirm,
   MsgValsetUpdatedClaim,
-} from "../../proto/gravity/v1/msgs";
+} from "../../proto/multigravity/v1/msgs";
 
 export const gravityTypes: ReadonlyArray<[string, GeneratedType]> = [
   ["/gravity.v1.MsgSetOrchestratorAddress", MsgSetOrchestratorAddress],
